@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stone &amp; Outdoor — Nuway Training Portal</title>
+<!-- BUILD: 2026-05-28-c-auto-reset-on-version-change -->
+<meta name="build" content="2026-05-28-c-auto-reset-on-version-change" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;600;700&family=Raleway:wght@300;400;600;700&family=Lato:wght@300;400;700&family=Inter:wght@300;400;600;700&family=Jost:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600;700&display=swap" />
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: var(--bfont, 'Poppins', sans-serif); background: var(--c-cream, #F2F1EE); }
+  input, textarea, select, button { font-family: var(--bfont, 'Poppins', sans-serif); }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--c-cream, #F2F1EE); }
+  ::-webkit-scrollbar-thumb { background: var(--c-silver, #D0D1CC); border-radius: 3px; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes slideIn { from { transform:translateX(100%); } to { transform:translateX(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+  .slide-in { animation: slideIn 0.3s ease forwards; }
+  .btn-hover:hover { opacity: 0.88; transform: translateY(-1px); transition: all 0.2s; }
+  .card-hover:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.12); transition: all 0.25s; }
+  .contact-link { cursor: pointer; }
+  .contact-link:hover { text-decoration: underline !important; }
+  @media (max-width: 760px) {
+    .twocol { grid-template-columns: 1fr !important; }
+    .hdr-padded { padding: 0 16px !important; }
+    .hero-padded { padding: 36px 16px !important; }
+    .body-padded { padding: 28px 16px 60px !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo } = React;
+
+// Bump this whenever you want all existing browsers to refresh to new defaults.
+const BUILD_VERSION = "2026-05-28-c";
+
+// On load, if the saved build version doesn't match the current code, clear stale saved content
+// so users see the latest defaults instead of merging stale data over new code.
+(function checkBuild() {
+  try {
+    const savedBuild = localStorage.getItem("buildVersion");
+    if (savedBuild !== BUILD_VERSION) {
+      // Preserve logins / videoStats / completions — only clear "content" so structure refreshes
+      localStorage.removeItem("content");
+      localStorage.setItem("buildVersion", BUILD_VERSION);
+    }
+  } catch (e) {}
+})();
+
+const ADMIN_CODE = "KrystalAdmin2026";
+const DEFAULT_STAFF_CODE = "nuway2026";
+const STORES = [
+  "Nuway Ashmore","Nuway Ormeau","Nuway Logan","Nuway Forestdale","Nuway Westerns",
+  "Nuway Mango Hill","Nuway Pine Rivers","Nuway Buderim","Nuway Burpengary","Nuway Redlands","Nuway Chandler",
+  "Nuway Operations (Relief / Ops Managers)"
+];
+
+const ROLES = [
+  "Yard","Sales","Store Manager","Assistant Manager","Operations Manager","Relief Staff","Other"
+];
+
+const FONTS = [
+  { v: "'Poppins', sans-serif", n: "Poppins (default — brand)" },
+  { v: "'Playfair Display', serif", n: "Playfair Display — Elegant serif" },
+  { v: "'Montserrat', sans-serif", n: "Montserrat — Modern & clean" },
+  { v: "'Raleway', sans-serif", n: "Raleway — Stylish geometric" },
+  { v: "'Lato', sans-serif", n: "Lato — Friendly & professional" },
+  { v: "'Inter', sans-serif", n: "Inter — Tech minimal" },
+  { v: "'Jost', sans-serif", n: "Jost — Contemporary" },
+  { v: "'Open Sans', sans-serif", n: "Open Sans — Clean readable" },
+];
+
+const DEFAULT_CONTENT = {
+  // ── THEME ──
+  theme: {
+    colorDark: "#393F4A",
+    colorCream: "#F2F1EE",
+    colorSilver: "#D0D1CC",
+    colorGold: "#8B7355",
+    colorWhite: "#FFFFFF",
+    colorText: "#444444",
+    headingFont: "'Poppins', sans-serif",
+    bodyFont: "'Poppins', sans-serif",
+    fontSize: 15,
+  },
+
+  // ── LOGO ──
+  logoUrl: "https://stoneoutdoor.com.au/wp-content/uploads/Stone-Outdoor-Stacked-Light.svg",
+  logoHeight: 140,
+
+  // ── HEADER SOCIAL LINKS ──
+  social: {
+    facebook: "https://www.facebook.com/stoneandoutdoor",
+    instagram: "https://www.instagram.com/stoneandoutdoor/",
+    website: "https://www.stoneoutdoor.com.au",
+  },
+
+  // ── LOGIN SCREEN ──
+  login: {
+    badge: "Nuway Training Portal",
+    welcomeTitle: "Welcome",
+    welcomeText: "Sign in to access your Stone & Outdoor training resources, videos, and guides.",
+    needAccessText: "Need access? Contact Krystal —",
+    needAccessNumber: "0493 800 055",
+  },
+
+  // ── HERO ──
+  hero: {
+    eyebrow: "Nuway Stores — Staff Training Hub",
+    title: "Your complete Stone & Outdoor training resource",
+    description: "Everything your team needs to confidently sell and support Stone & Outdoor products — videos, guides, contacts, and more.",
+    tags: ["Training Videos","Counter Folder","Procedures","Contacts","Feedback"],
+  },
+
+  // ── VIDEOS ──
+  videosSection: { show: true, step: "Step 1", title: "Training Videos" },
+  videos: [
+    { id:"v1", title:"Stone & Outdoor x Nuway Intro", tag:"All Staff · Start Here", desc:"Welcome video — get insights into who we are and what products we sell together.", url:"", thumbnail:"" },
+    { id:"v2", title:"Enviornex Synergy Sealing", tag:"Sealing · Staff Reference", desc:"Sealing is recommended to be completed by a licensed tradesman — guidance only for staff information.", url:"", thumbnail:"" },
+    { id:"v3", title:"Pool Coping Dip Sealing", tag:"Sealing · Staff Reference", desc:"Sealing is recommended to be completed by a licensed tradesman — guidance only for staff information.", url:"", thumbnail:"" },
+    { id:"v4", title:"Travertine Silver Quarry Process", tag:"Quarry · Staff Reference", desc:"How travertine is quarried — guidance only for staff information.", url:"", thumbnail:"" },
+    { id:"v5", title:"How Stone Panels Are Made", tag:"Manufacturing · Staff Reference", desc:"How stone panels are made — guidance only for staff information.", url:"", thumbnail:"" },
+  ],
+
+  // ── COUNTER FOLDER (was Downloads) ──
+  downloadsSection: {
+    show: true,
+    step: "Counter Folder",
+    title: "Product Information Sheets",
+    warning: "These are training resources only — DO NOT give to customers. For staff reference and printing only.",
+    bulkPdfUrl: "pdfs/COUNTER_FOLDER.pdf",
+    bulkPdfLabel: "Full Counter Folder PDF",
+  },
+  downloads: [],
+
+  // ── PROCEDURES ──
+  proceduresSection: {
+    show: true,
+    step: "Procedures",
+    title: "Procedures — Read & Follow",
+    note: "Click to read. All staff must read both procedures during training.",
+  },
+  procedures: [
+    { id:"p1", title:"Customer Complaint & Order Troubleshooting Procedure", desc:"What to do when a customer raises a complaint or there's an issue with an order.", url:"pdfs/COMPLAINT_PROCEDURE.pdf" },
+    { id:"p2", title:"Nuway Ordering Procedure", desc:"How to place orders with Stone & Outdoor — codes, minimum quantities, correct process.", url:"pdfs/ORDERING_PROCEDURE.pdf" },
+  ],
+
+  // ── COMPLAINT ──
+  complaintSection: {
+    show: true,
+    step: "Important",
+    title: "New Complaint Procedure",
+    borderColor: "#c0392b",
+    banner: "All staff must follow this procedure — effective immediately",
+    steps: [
+      "Listen to the customer's complaint calmly and professionally. Do not offer refunds, replacements, or opinions on fault.",
+      "Record the customer's full name, contact number, product name, quantity purchased, and nature of the complaint.",
+      "Take or request photos of the product concern if available — from the customer or if the product is in store.",
+      "Do not contact Stone & Outdoor directly on behalf of the customer. Direct the customer to the Contact Page inside the counter folder.",
+      "Log the complaint with your store manager so it can be tracked and followed up if required.",
+      "Stone & Outdoor will assess and respond to the customer directly within a reasonable timeframe.",
+    ],
+  },
+
+  // ── CONTACTS ──
+  contactsSection: {
+    show: true,
+    step: "Contact Directory",
+    title: "Who to Contact at Stone & Outdoor",
+    intro: "For Nuway Staff Use Only. Match your enquiry to the right person below.",
+    pdfUrl: "pdfs/CONTACTS_LIST.pdf",
+    pdfLabel: "Full Contacts List PDF",
+    featured: {
+      tag: "Warehouse Manager — PRIMARY for stock, orders & deliveries",
+      name: "John Latoa",
+      role: "Yard orders · Customer orders · Pick-ups · Stock photos & quantity checks · Shipment ETAs · Invoices & POs · Display stock",
+      mobile: "0428 802 647",
+      office: "",
+      email: "sales@stoneoutdoor.com.au",
+      website: "Renix & Nikola (Nik) may answer this phone",
+      websiteUrl: "",
+    },
+    cards: [
+      {
+        id: "c1",
+        tag: "Sales & Business Development Manager",
+        name: "Krystal Adamson",
+        role: "Customer complaints & order issues · Installation guides & technical docs · Slip ratings & product suitability · Staff training · Product info & specs · Special pricing · Nuway pricing queries",
+        items: [
+          { type: "phone", text: "0493 800 055 (mobile — commercial/trade only)", href: "tel:0493800055" },
+          { type: "phone", text: "07 3808 4503 (landline — pick-up coordination)", href: "tel:0738084503" },
+          { type: "mail",  text: "krystal@stoneoutdoor.com.au", href: "mailto:krystal@stoneoutdoor.com.au" },
+        ],
+        note: "Landline diverts to Krystal, then to John if Krystal is unavailable. Mobile only for commercial customers and trade clients.",
+      },
+      {
+        id: "c2",
+        tag: "CEO — Backup Only",
+        name: "Chris Haddon",
+        role: "Backup contact only — when Krystal is on leave AND John has advised to contact Chris.",
+        items: [
+          { type: "phone", text: "0403 359 619", href: "tel:0403359619" },
+          { type: "mail",  text: "chris@stoneoutdoor.com.au", href: "mailto:chris@stoneoutdoor.com.au" },
+        ],
+        note: "⚠ Chris's details are NEVER to be provided to customers. Nuway internal use only.",
+      },
+      {
+        id: "c3",
+        tag: "Warehouse Staff",
+        name: "Renix Price · Nikola (Nik) Mafi",
+        role: "Day-to-day operational support under direction of the Warehouse Manager. May answer the sales line while training — please be patient.",
+        items: [
+          { type: "phone", text: "0428 802 647 (sales line)", href: "tel:0428802647" },
+          { type: "mail",  text: "sales@stoneoutdoor.com.au", href: "mailto:sales@stoneoutdoor.com.au" },
+        ],
+        note: "",
+      },
+      {
+        id: "c4",
+        tag: "Quick Reference — Escalation Summary",
+        name: "Who to Contact",
+        role: "Stock / warehouse / orders / deliveries → John · Complaints / technical / pricing / training → Krystal · Krystal on leave & John advises → Chris · Customer pick-ups → Stone & Outdoor landline · Commercial & trade → Krystal mobile only",
+        items: [],
+        note: "Chris's details: internal use only — never shared.",
+      },
+    ],
+  },
+
+  // ── CHECKLIST ──
+  checklistSection: {
+    show: true,
+    step: "Step 3",
+    title: "Staff Training Checklist",
+    trackerLabel: "Training Completion Tracker",
+    extras: [
+      { id: "guide",  label: "Read the Training Guide" },
+      { id: "folder", label: "Counter folder reviewed with manager" },
+      { id: "yard",   label: "Walked through the outdoor yard stock area" },
+    ],
+    processTitle: "Independent Training Process",
+    process: [
+      { n: 1, title: "Watch All Videos", desc: "All staff including yard staff watch the training videos during a quiet period or rainy day." },
+      { n: 2, title: "Manager Walkthrough", desc: "Walk staff through the counter folder, display area, and yard. Write questions down for Krystal." },
+      { n: 3, title: "Track & Report", desc: "Tick off the checklist for each staff member and send completed names to Krystal." },
+      { n: 4, title: "6-Month Refresher", desc: "Krystal visits every 6 months for refresher training and new product updates." },
+    ],
+  },
+
+  // ── FEEDBACK ──
+  feedbackSection: {
+    show: true,
+    step: "Help Us Improve",
+    title: "Feedback & Suggestions",
+    intro: "Have suggestions for the counter folder, or ideas for future videos — quarry tours, how products are made, how-to laying guides? Let Krystal know below.",
+    confirm: "Thank you! Krystal will review your feedback and be in touch if needed.",
+  },
+
+  // ── FOOTER ──
+  footer: {
+    text: "© 2026 Stone & Outdoor · Nuway Training Portal · Internal use only",
+    websiteText: "stoneoutdoor.com.au",
+    websiteUrl: "https://www.stoneoutdoor.com.au",
+    contactName: "Krystal Adamson",
+    contactPhone: "0493 800 055",
+  },
+
+  // ── AUTH ──
+  staffCode: DEFAULT_STAFF_CODE,
+};
+
+// ─── Storage helpers (localStorage) ───────────────────────────────────────────
+async function load(key) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }
+  catch { return null; }
+}
+async function save(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); return { ok: true }; }
+  catch (err) {
+    const isQuota = err && (err.code === 22 || err.code === 1014 || /quota/i.test(err.name || "") || /quota/i.test(err.message || ""));
+    return { ok: false, quota: isQuota, message: err && err.message };
+  }
+}
+function storageBytes() {
+  try { let n = 0; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); n += (localStorage.getItem(k) || "").length + k.length; } return n; }
+  catch { return 0; }
+}
+// View link helper — handles data: URLs by converting to a blob URL (modern browsers block top-level data: navigation)
+function viewUrl(url) {
+  if (!url) return;
+  if (url.startsWith("data:")) {
+    fetch(url).then(r => r.blob()).then(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, "_blank");
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    }).catch(e => alert("Could not open the file: " + e.message));
+  } else {
+    window.open(url, "_blank");
+  }
+}
+
+// Apply theme to CSS variables
+function applyTheme(t) {
+  const r = document.documentElement;
+  r.style.setProperty("--c-dark",   t.colorDark);
+  r.style.setProperty("--c-cream",  t.colorCream);
+  r.style.setProperty("--c-silver", t.colorSilver);
+  r.style.setProperty("--c-gold",   t.colorGold);
+  r.style.setProperty("--c-white",  t.colorWhite);
+  r.style.setProperty("--c-text",   t.colorText);
+  r.style.setProperty("--hfont",    t.headingFont);
+  r.style.setProperty("--bfont",    t.bodyFont);
+  document.body.style.fontSize = (t.fontSize || 15) + "px";
+}
+
+// Helper to build B colour-tokens object from a theme
+function makeB(t) {
+  return {
+    dark: t.colorDark, cream: t.colorCream, silver: t.colorSilver,
+    gold: t.colorGold, white: t.colorWhite, text: t.colorText,
+    hfont: t.headingFont, bfont: t.bodyFont,
+  };
+}
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+const Icon = {
+  play: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.68L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg>,
+  download: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zm-8 2V5h2v6h1.17L12 13.17 9.83 11H11zm-6 7h14v2H5z"/></svg>,
+  close: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>,
+  check: () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>,
+  phone: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>,
+  mail: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>,
+  globe: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.9 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>,
+  alert: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>,
+  edit: () => <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.83 1.42H5v-.83l9.06-9.06.83.83-9.06 9.06zm15.41-10.25c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>,
+  plus: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>,
+  trash: () => <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>,
+  logout: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>,
+  up: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>,
+  down: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>,
+  reset: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>,
+  facebook: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>,
+  instagram: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>,
+};
+
+const iconFor = (type) => ({ phone: <Icon.phone />, mail: <Icon.mail />, globe: <Icon.globe /> }[type] || <Icon.globe />);
+
+// ─── Shared Btn / Input ──────────────────────────────────────────────────────
+function Btn({ children, onClick, variant = "primary", small, style: s, disabled, B }) {
+  const base = {
+    display: "inline-flex", alignItems: "center", gap: 6,
+    padding: small ? "7px 16px" : "10px 22px",
+    fontSize: small ? 12 : 13, fontWeight: 600,
+    letterSpacing: "0.06em", textTransform: "uppercase",
+    border: "none", cursor: disabled ? "not-allowed" : "pointer",
+    transition: "all 0.2s", borderRadius: 2, opacity: disabled ? 0.5 : 1,
+  };
+  const variants = {
+    primary: { background: B.dark, color: B.cream },
+    outline: { background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` },
+    ghost: { background: "transparent", color: B.dark, border: `1.5px solid ${B.silver}` },
+    danger: { background: "#c0392b", color: "#fff" },
+    gold: { background: B.gold, color: "#fff" },
+  };
+  return <button onClick={onClick} disabled={disabled} className="btn-hover"
+    style={{ ...base, ...variants[variant], ...s }}>{children}</button>;
+}
+
+function Input({ label, value, onChange, type = "text", placeholder, rows, hint, B }) {
+  const fieldStyle = {
+    width: "100%", padding: "9px 12px",
+    border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff",
+    outline: "none", borderRadius: 2, fontFamily: B.bfont, transition: "border-color 0.2s",
+  };
+  return (
+    <div style={{ marginBottom: 14 }}>
+      {label && <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>{label}</div>}
+      {rows
+        ? <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={rows} style={{ ...fieldStyle, resize: "vertical" }} />
+        : <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={fieldStyle} />}
+      {hint && <div style={{ fontSize: 11, color: "#999", marginTop: 4 }}>{hint}</div>}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+// LOGIN SCREEN
+// ════════════════════════════════════════════════════════════════════
+function LoginScreen({ onLogin, content, B }) {
+  const [store, setStore] = useState("");
+  const [code, setCode] = useState("");
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin() {
+    if (!store.trim()) { setErr("Please select your store."); return; }
+    if (!code) { setErr("Please enter your access code."); return; }
+    setLoading(true); setErr("");
+    const staffCode = content.staffCode || DEFAULT_STAFF_CODE;
+    if (code === ADMIN_CODE) {
+      onLogin({ store: "Admin — Krystal", isAdmin: true });
+    } else if (code === staffCode) {
+      const existing = (await load("logins")) || [];
+      existing.push({ store: store.trim(), ts: Date.now() });
+      await save("logins", existing);
+      onLogin({ store: store.trim(), isAdmin: false });
+    } else {
+      setErr("Incorrect access code. Please contact Krystal on " + content.login.needAccessNumber + ".");
+    }
+    setLoading(false);
+  }
+
+  return (
+    <div style={{ minHeight: "100vh", background: B.dark, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div className="fade-in" style={{ background: B.white, width: 420, maxWidth: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.4)" }}>
+        <div style={{ background: B.dark, padding: "36px 36px 28px", textAlign: "center" }}>
+          <img src={content.logoUrl} alt="Logo" style={{ height: 48, objectFit: "contain", marginBottom: 16 }}
+            onError={e => { e.target.style.display = "none"; }} />
+          <div style={{ display: "inline-block", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: B.silver, border: `1px solid ${B.silver}66`, padding: "4px 14px", borderRadius: 20 }}>
+            {content.login.badge}
+          </div>
+        </div>
+        <div style={{ padding: "32px 36px 36px" }}>
+          <div style={{ fontFamily: B.hfont, fontSize: 22, fontWeight: 600, color: B.dark, marginBottom: 6 }}>{content.login.welcomeTitle}</div>
+          <div style={{ fontSize: 13, color: "#777", marginBottom: 24, lineHeight: 1.6 }}>{content.login.welcomeText}</div>
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Store Name</div>
+            <select value={store} onChange={e => setStore(e.target.value)}
+              style={{ width: "100%", padding: "10px 12px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", fontFamily: B.bfont, outline: "none", borderRadius: 2 }}>
+              <option value="">Select your store…</option>
+              {STORES.map(s => <option key={s} value={s}>{s}</option>)}
+              <option value="Admin — Krystal">Admin — Krystal</option>
+            </select>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Access Code</div>
+            <input type="password" value={code} onChange={e => setCode(e.target.value)} placeholder="Enter your access code"
+              onKeyDown={e => e.key === "Enter" && handleLogin()}
+              style={{ width: "100%", padding: "10px 12px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", fontFamily: B.bfont, outline: "none", borderRadius: 2 }} />
+          </div>
+          {err && <div style={{ background: "#fff5f5", borderLeft: "3px solid #c0392b", color: "#a33", padding: "10px 12px", fontSize: 13, marginBottom: 14 }}>{err}</div>}
+          <Btn B={B} onClick={handleLogin} disabled={loading} style={{ width: "100%", justifyContent: "center" }}>
+            {loading ? "Signing in…" : "Access Training Portal"}
+          </Btn>
+          <div style={{ textAlign: "center", marginTop: 18, fontSize: 12, color: "#999" }}>
+            {content.login.needAccessText} <strong style={{ color: B.dark }}>{content.login.needAccessNumber}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+// VIDEO MODAL
+// ════════════════════════════════════════════════════════════════════
+function VideoModal({ video, onClose, onWatch, B }) {
+  useEffect(() => { onWatch(video.id); }, []);
+  const isEmbed = video.url && (video.url.includes("youtube") || video.url.includes("youtu.be") || video.url.includes("vimeo") || video.url.includes("drive.google"));
+
+  function getEmbedUrl(url) {
+    if (url.includes("youtu.be/")) return "https://www.youtube.com/embed/" + url.split("youtu.be/")[1].split("?")[0];
+    if (url.includes("youtube.com/watch")) { const u = new URL(url); return "https://www.youtube.com/embed/" + u.searchParams.get("v"); }
+    if (url.includes("vimeo.com/")) return "https://player.vimeo.com/video/" + url.split("vimeo.com/")[1].split("?")[0];
+    if (url.includes("drive.google.com")) return url.replace("/view", "/preview");
+    return url;
+  }
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="fade-in" style={{ background: "#fff", width: 720, maxWidth: "100%", padding: 32, position: "relative" }}>
+        <button onClick={onClose} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", cursor: "pointer", color: "#999" }}><Icon.close /></button>
+        <div style={{ fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: B.gold, marginBottom: 6 }}>{video.tag}</div>
+        <div style={{ fontFamily: B.hfont, fontSize: 20, fontWeight: 600, color: B.dark, marginBottom: 8 }}>{video.title}</div>
+        <div style={{ fontSize: 13, color: "#666", marginBottom: 20, lineHeight: 1.6 }}>{video.desc}</div>
+        {video.url && isEmbed ? (
+          <div style={{ aspectRatio: "16/9", background: "#000" }}>
+            <iframe src={getEmbedUrl(video.url)} style={{ width: "100%", height: "100%", border: "none" }} allowFullScreen />
+          </div>
+        ) : video.url ? (
+          <div style={{ background: B.cream, padding: 20, textAlign: "center" }}>
+            <div style={{ marginBottom: 12, color: "#555", fontSize: 13 }}>This video opens in a new tab.</div>
+            <Btn B={B} onClick={() => window.open(video.url, "_blank")}>Open Video</Btn>
+          </div>
+        ) : (
+          <div style={{ background: B.cream, border: `1.5px dashed ${B.silver}`, padding: 28, textAlign: "center" }}>
+            <div style={{ fontSize: 13, color: "#888", lineHeight: 1.7 }}>
+              📎 <strong>Video coming soon.</strong><br />
+              Add this video link from the Admin Editor → Videos tab.
+            </div>
+          </div>
+        )}
+        <div style={{ marginTop: 18, textAlign: "right" }}>
+          <Btn B={B} onClick={onClose} variant="ghost" small>Close</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+// FEEDBACK FORM
+// ════════════════════════════════════════════════════════════════════
+function FeedbackForm({ content, B }) {
+  const [name, setName] = useState("");
+  const [store, setStore] = useState("");
+  const [type, setType] = useState("");
+  const [msg, setMsg] = useState("");
+  const [sent, setSent] = useState(false);
+
+  function submit() {
+    if (!msg.trim()) { alert("Please enter your feedback."); return; }
+    const recipient = (content.feedbackSection && content.feedbackSection.recipient) || (content.footer && content.footer.contactEmail) || "krystal@stoneoutdoor.com.au";
+    const subject = encodeURIComponent("Nuway Training Portal — Feedback from " + (name || "Anonymous"));
+    const body = encodeURIComponent(
+      "Name: " + (name || "(not provided)") + "\n" +
+      "Store: " + (store || "(not provided)") + "\n" +
+      "Feedback type: " + (type || "(not provided)") + "\n\n" +
+      "Feedback:\n" + msg + "\n\n" +
+      "— Sent from the Nuway Training Portal"
+    );
+    window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+    setSent(true);
+    setName(""); setStore(""); setType(""); setMsg("");
+  }
+
+  if (sent) return (
+    <div style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: 32 }}>
+      <div style={{ padding: "12px 14px", background: "#f0f7ee", borderLeft: "3px solid #5a9e4a", color: "#3a6630", fontSize: 14 }}>
+        ✓ {content.feedbackSection.confirm}
+      </div>
+      <Btn B={B} onClick={() => setSent(false)} variant="ghost" small style={{ marginTop: 14 }}>Submit another</Btn>
+    </div>
+  );
+
+  return (
+    <div style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: 32 }}>
+      <div style={{ fontSize: 14, color: "#888", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>
+        {content.feedbackSection.intro}
+      </div>
+      <div className="twocol" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
+        <Input B={B} label="Your Name" value={name} onChange={setName} placeholder="Name" />
+        <Input B={B} label="Store Name" value={store} onChange={setStore} placeholder="Nuway store" />
+      </div>
+      <Input B={B} label="Feedback Type" value={type} onChange={setType} placeholder="e.g. Video idea, counter folder suggestion..." />
+      <Input B={B} label="Your Feedback" value={msg} onChange={setMsg} placeholder="Tell us what you'd like to see added or changed..." rows={4} />
+      <Btn B={B} onClick={submit}>Submit Feedback</Btn>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+// PORTAL (main content)
+// ════════════════════════════════════════════════════════════════════
+function Portal({ session, content, onLogout, onAdminOpen, onVideoWatch, videoStats, onCompletion, B }) {
+  const [activeVideo, setActiveVideo] = useState(null);
+  const [checklist, setChecklist] = useState({});
+  const [completeOpen, setCompleteOpen] = useState(false);
+  const [staffName, setStaffName] = useState("");
+  const [staffRole, setStaffRole] = useState("");
+  const [confirmDone, setConfirmDone] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const fullLogoH = content.logoHeight || 140;
+  const shrunkLogoH = Math.max(36, Math.round(fullLogoH * 0.35));
+  const logoH = scrolled ? shrunkLogoH : fullLogoH;
+
+  const totalItems = content.videos.length + content.checklistSection.extras.length;
+  const doneCount = Object.values(checklist).filter(Boolean).length;
+  function toggleCheck(key) { setChecklist(c => ({ ...c, [key]: !c[key] })); }
+
+  function submitCompletion() {
+    if (!staffName.trim()) { alert("Please enter your name."); return; }
+    if (!staffRole) { alert("Please select your role."); return; }
+    onCompletion({
+      store: session.store,
+      name: staffName.trim(),
+      role: staffRole,
+      itemsDone: doneCount,
+      itemsTotal: totalItems,
+    });
+    const recipient = (content.completionRecipient) || (content.footer && content.footer.contactEmail) || "krystal@stoneoutdoor.com.au";
+    const subject = encodeURIComponent("Training Complete — " + staffName.trim() + " (" + session.store + ")");
+    const body = encodeURIComponent(
+      "Hi " + (content.footer && content.footer.contactName || "Krystal") + ",\n\n" +
+      "I've completed my Nuway training.\n\n" +
+      "Name: " + staffName.trim() + "\n" +
+      "Role: " + staffRole + "\n" +
+      "Store: " + session.store + "\n" +
+      "Items completed: " + doneCount + " / " + totalItems + "\n" +
+      "Date: " + new Date().toLocaleString("en-AU") + "\n\n" +
+      "— Sent from the Nuway Training Portal"
+    );
+    const mailto = `mailto:${recipient}?subject=${subject}&body=${body}`;
+    setTimeout(() => { window.location.href = mailto; }, 200);
+    setConfirmDone(true);
+  }
+
+  const SectionHeader = ({ step, title }) => (
+    <div style={{ marginBottom: 26, paddingBottom: 14, borderBottom: `1px solid ${B.silver}`, position: "relative" }}>
+      <div style={{ position: "absolute", bottom: -1, left: 0, width: 44, height: 2, background: B.dark }} />
+      {step && <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: B.gold, marginBottom: 4 }}>{step}</div>}
+      <div style={{ fontFamily: B.hfont, fontSize: 22, fontWeight: 600, color: B.dark }}>{title}</div>
+    </div>
+  );
+
+  return (
+    <div style={{ minHeight: "100vh", background: B.cream }}>
+      {/* Header */}
+      <div className="hdr-padded" style={{ background: B.dark, minHeight: logoH + 28, display: "flex", alignItems: "center", justifyContent: "space-between", padding: scrolled ? "8px 40px" : "14px 40px", position: "sticky", top: 0, zIndex: 100, boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.45)" : "0 2px 20px rgba(0,0,0,0.3)", gap: 16, flexWrap: "wrap", transition: "all 0.25s ease" }}>
+        <img src={content.logoUrl} alt="Logo" style={{ height: logoH, objectFit: "contain", maxWidth: "100%", transition: "height 0.25s ease" }} onError={e => e.target.style.display = "none"} />
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          {content.social && content.social.facebook && (
+            <a href={content.social.facebook} target="_blank" rel="noreferrer" title="Facebook" className="btn-hover" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: scrolled ? 36 : 52, height: scrolled ? 36 : 52, border: "1px solid rgba(255,255,255,0.25)", color: "rgba(255,255,255,0.9)", textDecoration: "none", borderRadius: 6, transition: "all 0.25s ease" }}><span style={{ transform: scrolled ? "scale(1)" : "scale(1.5)", display: "inline-flex", transition: "transform 0.25s ease" }}><Icon.facebook /></span></a>
+          )}
+          {content.social && content.social.instagram && (
+            <a href={content.social.instagram} target="_blank" rel="noreferrer" title="Instagram" className="btn-hover" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: scrolled ? 36 : 52, height: scrolled ? 36 : 52, border: "1px solid rgba(255,255,255,0.25)", color: "rgba(255,255,255,0.9)", textDecoration: "none", borderRadius: 6, transition: "all 0.25s ease" }}><span style={{ transform: scrolled ? "scale(1)" : "scale(1.5)", display: "inline-flex", transition: "transform 0.25s ease" }}><Icon.instagram /></span></a>
+          )}
+          {content.social && content.social.website && (
+            <a href={content.social.website} target="_blank" rel="noreferrer" title="Website" className="btn-hover" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: scrolled ? 36 : 52, height: scrolled ? 36 : 52, border: "1px solid rgba(255,255,255,0.25)", color: "rgba(255,255,255,0.9)", textDecoration: "none", borderRadius: 6, transition: "all 0.25s ease" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.9 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+            </a>
+          )}
+          <div style={{ fontSize: 11, letterSpacing: "0.08em", color: B.silver, textTransform: "uppercase", background: B.silver + "22", border: `1px solid ${B.silver}40`, padding: "5px 12px", borderRadius: 20 }}>{session.store}</div>
+          {session.isAdmin && (
+            <button onClick={onAdminOpen} className="btn-hover" style={{ background: B.gold, border: "none", color: "#fff", padding: "7px 14px", fontSize: 12, fontWeight: 700, letterSpacing: "0.06em", cursor: "pointer", fontFamily: B.bfont, display: "flex", alignItems: "center", gap: 6 }}>
+              <Icon.edit /> Admin Editor
+            </button>
+          )}
+          <button onClick={onLogout} className="btn-hover" style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.75)", padding: "7px 14px", fontSize: 12, letterSpacing: "0.06em", cursor: "pointer", fontFamily: B.bfont, display: "flex", alignItems: "center", gap: 6 }}>
+            <Icon.logout /> Sign Out
+          </button>
+        </div>
+      </div>
+
+      {/* Hero */}
+      <div className="hero-padded" style={{ background: B.dark, padding: "60px 40px 56px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 80% 50%, ${B.silver}15, transparent 60%)`, pointerEvents: "none" }} />
+        <div style={{ maxWidth: 680, position: "relative", zIndex: 1 }}>
+          <div style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: B.silver, marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
+            {content.hero.eyebrow}
+            <span style={{ width: 36, height: 1, background: B.silver, opacity: 0.5, display: "inline-block" }} />
+          </div>
+          <div style={{ fontFamily: B.hfont, fontSize: 36, fontWeight: 600, color: "#fff", lineHeight: 1.2, marginBottom: 14 }}>{content.hero.title}</div>
+          <div style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.7, maxWidth: 500, marginBottom: 24 }}>{content.hero.description}</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {content.hero.tags.map((t, i) => {
+              const lower = t.toLowerCase();
+              let target = null;
+              if (lower.includes("video")) target = "section-videos";
+              else if (lower.includes("counter") || lower.includes("download") || lower.includes("guide") || lower.includes("product") || lower.includes("sheet")) target = "section-downloads";
+              else if (lower.includes("procedure") || lower.includes("complaint") || lower.includes("ordering")) target = "section-procedures";
+              else if (lower.includes("contact")) target = "section-contacts";
+              else if (lower.includes("checklist") || lower.includes("complete") || lower.includes("submit")) target = "section-complete";
+              else if (lower.includes("feedback")) target = "section-feedback";
+              const baseStyle = { fontSize: 11, letterSpacing: "0.05em", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.18)", padding: "6px 14px", textDecoration: "none", display: "inline-block", transition: "all 0.2s" };
+              return target ? (
+                <a key={i} href={"#" + target} className="btn-hover"
+                   onClick={e => { e.preventDefault(); const el = document.getElementById(target); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                   style={{ ...baseStyle, cursor: "pointer" }}
+                   onMouseEnter={e => { e.currentTarget.style.background = B.gold; e.currentTarget.style.borderColor = B.gold; e.currentTarget.style.color = "#fff"; }}
+                   onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)"; e.currentTarget.style.color = "rgba(255,255,255,0.7)"; }}>{t}</a>
+              ) : (
+                <span key={i} style={baseStyle}>{t}</span>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="body-padded" style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 40px 90px" }}>
+
+        {/* VIDEOS */}
+        {content.videosSection.show && (
+          <div id="section-videos" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
+            <SectionHeader step={content.videosSection.step} title={content.videosSection.title} />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 18 }}>
+              {content.videos.map(v => (
+                <div key={v.id} className="card-hover" style={{ background: "#fff", border: `1px solid ${B.silver}` }}>
+                  <div onClick={() => setActiveVideo(v)} style={{ backgroundColor: B.dark, backgroundImage: v.thumbnail ? `url("${v.thumbnail}")` : "none", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", position: "relative", overflow: "hidden" }}>
+                    <div style={{ position: "absolute", inset: 0, background: v.thumbnail ? "linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55))" : `linear-gradient(135deg, ${B.silver}22, rgba(0,0,0,0.4))` }} />
+                    <div className="btn-hover" style={{ width: 56, height: 56, background: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", zIndex: 1, boxShadow: "0 4px 22px rgba(0,0,0,0.4)", color: B.dark }}>
+                      <Icon.play />
+                    </div>
+                    {(videoStats[v.id] || 0) > 0 && (
+                      <div style={{ position: "absolute", top: 8, right: 8, background: B.dark + "CC", color: B.silver, fontSize: 10, padding: "2px 7px", borderRadius: 10 }}>
+                        {videoStats[v.id]} views
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ padding: "16px 18px 18px" }}>
+                    <div style={{ fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: B.gold, marginBottom: 5 }}>{v.tag}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: B.dark }}>{v.title}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* COUNTER FOLDER */}
+        {content.downloadsSection.show && (
+          <div id="section-downloads" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
+            <SectionHeader step={content.downloadsSection.step} title={content.downloadsSection.title} />
+            {content.downloadsSection.warning && (
+              <div style={{ background: "#fff5e8", border: `1px solid #f0c890`, borderLeft: `4px solid ${B.gold}`, padding: "14px 18px", marginBottom: 18, display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <div style={{ color: B.gold, flexShrink: 0, marginTop: 2 }}><Icon.alert /></div>
+                <div style={{ fontSize: 13, color: B.dark, lineHeight: 1.6, fontWeight: 500 }}>{content.downloadsSection.warning}</div>
+              </div>
+            )}
+            {content.downloadsSection.bulkPdfUrl && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22, alignItems: "center", padding: "16px 20px", background: "#fff", border: `1px solid ${B.silver}`, borderLeft: `4px solid ${B.dark}` }}>
+                <span style={{ fontSize: 13, color: B.dark, fontWeight: 600, marginRight: 6 }}>{content.downloadsSection.bulkPdfLabel || "Full Counter Folder PDF"}:</span>
+                <button onClick={() => viewUrl(content.downloadsSection.bulkPdfUrl)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", background: B.dark, color: "#fff", fontFamily: B.bfont }}>View</button>
+                {(content.downloadsSection.bulkPdfUrl.toLowerCase().endsWith(".pdf") || content.downloadsSection.bulkPdfUrl.startsWith("data:application/pdf")) && (
+                  <a href={content.downloadsSection.bulkPdfUrl} download={content.downloadsSection.bulkPdfFilename || "Counter Folder.pdf"} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` }}>Print / Save</a>
+                )}
+              </div>
+            )}
+            {content.downloads.length > 0 && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 1, background: B.silver, border: `1px solid ${B.silver}` }}>
+              {content.downloads.map(d => (
+                <div key={d.id} className="card-hover" style={{ background: "#fff", padding: 22, display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+                  {d.thumbnail && (
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, backgroundImage: `url("${d.thumbnail}")`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.7, pointerEvents: "none" }} />
+                  )}
+                  {d.thumbnail && (
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.88) 100%)", pointerEvents: "none" }} />
+                  )}
+                  <div style={{ position: "relative", zIndex: 1, width: 38, height: 38, background: B.dark, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, color: B.cream }}>
+                    <Icon.download />
+                  </div>
+                  <div style={{ position: "relative", zIndex: 1, fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: B.dark, marginBottom: 6 }}>{d.title}</div>
+                  <div style={{ position: "relative", zIndex: 1, fontSize: 12, color: "#666", lineHeight: 1.5, marginBottom: 16, flex: 1 }}>{d.desc}</div>
+                  {d.url ? (() => {
+                    const isPdf = d.url.toLowerCase().endsWith(".pdf") || d.url.startsWith("data:application/pdf");
+                    return (
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+                        <button onClick={() => viewUrl(d.url)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", background: B.dark, color: "#fff", fontFamily: B.bfont }}>View</button>
+                        {isPdf && (
+                          <a href={d.url} download={d.filename || d.title} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` }}>Print / Save</a>
+                        )}
+                      </div>
+                    );
+                  })() : <span style={{ fontSize: 11, color: "#bbb" }}>Link coming soon</span>}
+                </div>
+              ))}
+            </div>
+            )}
+          </div>
+        )}
+
+        {/* PROCEDURES */}
+        {content.proceduresSection && content.proceduresSection.show && (
+          <div id="section-procedures" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
+            <SectionHeader step={content.proceduresSection.step} title={content.proceduresSection.title} />
+            {content.proceduresSection.note && (
+              <div style={{ fontSize: 13, color: "#777", marginBottom: 18, lineHeight: 1.6 }}>{content.proceduresSection.note}</div>
+            )}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 18 }}>
+              {(content.procedures || []).map(p => (
+                <div key={p.id} className="card-hover" style={{ background: "#fff", border: `1px solid ${B.silver}`, borderLeft: `3px solid ${B.gold}`, padding: 22, display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+                  {p.thumbnail && (
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, backgroundImage: `url("${p.thumbnail}")`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.7, pointerEvents: "none" }} />
+                  )}
+                  {p.thumbnail && (
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.88) 100%)", pointerEvents: "none" }} />
+                  )}
+                  <div style={{ position: "relative", zIndex: 1, fontFamily: B.hfont, fontSize: 16, fontWeight: 600, color: B.dark, marginBottom: 8 }}>{p.title}</div>
+                  <div style={{ position: "relative", zIndex: 1, fontSize: 13, color: "#666", lineHeight: 1.6, marginBottom: 16, flex: 1 }}>{p.desc}</div>
+                  {p.url ? (() => {
+                    const isPdf = p.url.toLowerCase().endsWith(".pdf") || p.url.startsWith("data:application/pdf");
+                    return (
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+                        <button onClick={() => viewUrl(p.url)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", background: B.dark, color: "#fff", fontFamily: B.bfont }}>Read Procedure</button>
+                        {isPdf && (
+                          <a href={p.url} download={p.filename || p.title} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` }}>Print / Save</a>
+                        )}
+                      </div>
+                    );
+                  })() : <span style={{ fontSize: 12, color: "#bbb" }}>Link coming soon</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* COMPLAINT */}
+        {content.complaintSection.show && (
+          <div style={{ marginBottom: 56 }}>
+            <SectionHeader step={content.complaintSection.step} title={content.complaintSection.title} />
+            <div style={{ background: "#fff", border: `1px solid ${B.silver}`, borderTop: `4px solid ${content.complaintSection.borderColor || B.dark}` }}>
+              <div style={{ padding: "18px 24px", borderBottom: `1px solid ${B.silver}`, display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ color: B.gold, flexShrink: 0 }}><Icon.alert /></div>
+                <div style={{ fontFamily: B.hfont, fontSize: 15, fontWeight: 600, color: B.dark }}>{content.complaintSection.banner}</div>
+              </div>
+              {content.complaintSection.steps.map((step, i) => (
+                <div key={i} style={{ display: "flex", gap: 16, padding: "16px 24px", borderBottom: i < content.complaintSection.steps.length - 1 ? `1px solid ${B.cream}` : "none", fontSize: 14, color: B.text || "#444", lineHeight: 1.6 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: B.gold, flexShrink: 0, marginTop: 2, width: 22 }}>{String(i + 1).padStart(2, "0")}</span>
+                  {step}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* CONTACTS */}
+        {content.contactsSection.show && (
+          <div id="section-contacts" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
+            <SectionHeader step={content.contactsSection.step} title={content.contactsSection.title} />
+            {content.contactsSection.intro && (
+              <div style={{ fontSize: 13, color: "#777", marginBottom: 14, lineHeight: 1.6, fontStyle: "italic" }}>{content.contactsSection.intro}</div>
+            )}
+            {content.contactsSection.pdfUrl && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22, alignItems: "center" }}>
+                <span style={{ fontSize: 12, color: B.dark, fontWeight: 600 }}>{content.contactsSection.pdfLabel || "Contacts PDF"}:</span>
+                <button onClick={() => viewUrl(content.contactsSection.pdfUrl)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", background: B.dark, color: "#fff", fontFamily: B.bfont }}>View</button>
+                {(content.contactsSection.pdfUrl.toLowerCase().endsWith(".pdf") || content.contactsSection.pdfUrl.startsWith("data:application/pdf")) && (
+                  <a href={content.contactsSection.pdfUrl} download={content.contactsSection.pdfFilename || "Contacts.pdf"} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 16px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` }}>Print / Save</a>
+                )}
+              </div>
+            )}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 18 }}>
+              {/* Featured */}
+              <div style={{ background: B.dark, border: `1px solid ${B.dark}`, padding: 26, position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: B.gold }} />
+                <div style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: B.gold, marginBottom: 8 }}>{content.contactsSection.featured.tag}</div>
+                <div style={{ fontFamily: B.hfont, fontSize: 19, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{content.contactsSection.featured.name}</div>
+                <div style={{ fontSize: 12, color: B.silver + "B0", marginBottom: 16, paddingBottom: 14, borderBottom: `1px solid ${B.silver}26` }}>{content.contactsSection.featured.role}</div>
+                {[
+                  { icon: <Icon.phone />, text: content.contactsSection.featured.mobile, href: `tel:${(content.contactsSection.featured.mobile||"").replace(/\s/g,"")}` },
+                  { icon: <Icon.phone />, text: "Office: " + content.contactsSection.featured.office, href: `tel:${(content.contactsSection.featured.office||"").replace(/\s/g,"")}` },
+                  { icon: <Icon.mail />, text: content.contactsSection.featured.email, href: `mailto:${content.contactsSection.featured.email}` },
+                  { icon: <Icon.globe />, text: content.contactsSection.featured.website, href: content.contactsSection.featured.websiteUrl, external: true },
+                ].filter(r => r.text).map((row, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9, fontSize: 13, marginBottom: 9, color: "rgba(255,255,255,0.85)" }}>
+                    <span style={{ color: B.gold, flexShrink: 0, marginTop: 1 }}>{row.icon}</span>
+                    <a href={row.href} target={row.external ? "_blank" : undefined} rel={row.external ? "noreferrer" : undefined} className="contact-link" style={{ color: B.gold, textDecoration: "none", cursor: "pointer" }}>{row.text}</a>
+                  </div>
+                ))}
+              </div>
+              {/* Other cards */}
+              {content.contactsSection.cards.map(card => (
+                <div key={card.id} className="card-hover" style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: 26 }}>
+                  <div style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: B.gold, marginBottom: 8 }}>{card.tag}</div>
+                  <div style={{ fontFamily: B.hfont, fontSize: 18, fontWeight: 600, color: B.dark, marginBottom: 4 }}>{card.name}</div>
+                  <div style={{ fontSize: 12, color: "#888", marginBottom: 16, paddingBottom: 14, borderBottom: `1px solid ${B.silver}` }}>{card.role}</div>
+                  {(card.items || []).map((row, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9, fontSize: 13, marginBottom: 9, color: B.text || "#444" }}>
+                      <span style={{ color: "#999", flexShrink: 0, marginTop: 1 }}>{iconFor(row.type)}</span>
+                      <a href={row.href} target={row.href && row.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="contact-link" style={{ color: B.dark, textDecoration: "none", cursor: "pointer", fontWeight: 500 }}>{row.text}</a>
+                    </div>
+                  ))}
+                  {card.note && <div style={{ fontSize: 11, color: "#999", fontStyle: "italic", marginTop: 6 }}>{card.note}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* CHECKLIST */}
+        {content.checklistSection.show && (
+          <div style={{ marginBottom: 56 }}>
+            <SectionHeader step={content.checklistSection.step} title={content.checklistSection.title} />
+            <div className="twocol" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22 }}>
+              <div style={{ background: "#fff", border: `1px solid ${B.silver}`, overflow: "hidden" }}>
+                <div style={{ background: B.dark, padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#fff" }}>{content.checklistSection.trackerLabel}</div>
+                  <div style={{ fontSize: 11, color: B.gold, background: B.silver + "26", border: `1px solid ${B.silver}4D`, padding: "3px 10px", borderRadius: 12 }}>{doneCount} / {totalItems} done</div>
+                </div>
+                {[
+                  ...content.videos.map(v => ({ key: v.id, label: `Watched ${v.title} video` })),
+                  ...content.checklistSection.extras,
+                ].map(item => (
+                  <div key={item.key || item.id} onClick={() => toggleCheck(item.key || item.id)}
+                    style={{ display: "flex", alignItems: "center", gap: 13, padding: "12px 18px", borderBottom: `1px solid ${B.cream}`, cursor: "pointer", userSelect: "none", background: checklist[item.key || item.id] ? B.cream : "#fff", transition: "background 0.15s" }}>
+                    <div style={{ width: 19, height: 19, border: `1.5px solid ${checklist[item.key || item.id] ? B.dark : B.silver}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: checklist[item.key || item.id] ? B.dark : "transparent", transition: "all 0.2s" }}>
+                      {checklist[item.key || item.id] && <span style={{ color: "#fff" }}><Icon.check /></span>}
+                    </div>
+                    <span style={{ fontSize: 13, color: checklist[item.key || item.id] ? "#999" : B.dark, textDecoration: checklist[item.key || item.id] ? "line-through" : "none" }}>{item.label}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: 26 }}>
+                <div style={{ fontFamily: B.hfont, fontSize: 17, fontWeight: 600, color: B.dark, marginBottom: 20, paddingBottom: 14, borderBottom: `1px solid ${B.silver}` }}>{content.checklistSection.processTitle}</div>
+                {content.checklistSection.process.map((row, i) => (
+                  <div key={i} style={{ display: "flex", gap: 14, paddingBottom: 16, marginBottom: 16, borderBottom: i < content.checklistSection.process.length - 1 ? `1px solid ${B.cream}` : "none" }}>
+                    <div style={{ width: 28, height: 28, background: B.dark, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>{row.n}</div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: B.dark, marginBottom: 4 }}>{row.title}</div>
+                      <div style={{ fontSize: 12, color: "#888", lineHeight: 1.6 }}>{row.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MARK TRAINING COMPLETE — always visible */}
+        <div id="section-complete" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
+          <SectionHeader step="Submit Completion" title="Mark Your Training Complete" />
+          <div style={{ padding: 26, background: "#fff", border: `1px solid ${B.silver}`, borderLeft: `4px solid ${B.gold}`, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+            <div style={{ flex: "1 1 280px" }}>
+              <div style={{ fontFamily: B.hfont, fontSize: 17, fontWeight: 600, color: B.dark, marginBottom: 6 }}>Finished your training?</div>
+              <div style={{ fontSize: 13, color: "#777", lineHeight: 1.6 }}>Submit your name and role so {content.footer.contactName} knows you're complete and up to date.</div>
+            </div>
+            <Btn B={B} onClick={() => { setStaffName(""); setStaffRole(""); setConfirmDone(false); setCompleteOpen(true); }} variant="gold">Mark Training Complete</Btn>
+          </div>
+        </div>
+
+        {/* COMPLETE MODAL */}
+        {completeOpen && (
+          <div onClick={e => e.target === e.currentTarget && setCompleteOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 1100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+            <div className="fade-in" style={{ background: "#fff", width: 460, maxWidth: "100%", padding: 32, position: "relative" }}>
+              <button onClick={() => setCompleteOpen(false)} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", cursor: "pointer", color: "#999" }}><Icon.close /></button>
+              {confirmDone ? (
+                <>
+                  <div style={{ fontFamily: B.hfont, fontSize: 22, fontWeight: 600, color: B.dark, marginBottom: 10 }}>✓ Training logged!</div>
+                  <div style={{ fontSize: 14, color: "#666", lineHeight: 1.6, marginBottom: 22 }}>
+                    Thanks <strong>{staffName}</strong> — your completion has been recorded for <strong>{session.store}</strong>. {content.footer.contactName} will see you as up-to-date.
+                  </div>
+                  <Btn B={B} onClick={() => setCompleteOpen(false)}>Close</Btn>
+                </>
+              ) : (
+                <>
+                  <div style={{ fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: B.gold, marginBottom: 6 }}>Mark Training Complete</div>
+                  <div style={{ fontFamily: B.hfont, fontSize: 20, fontWeight: 600, color: B.dark, marginBottom: 8 }}>Confirm your details</div>
+                  <div style={{ fontSize: 13, color: "#666", marginBottom: 20, lineHeight: 1.6 }}>
+                    Logging completion for <strong style={{ color: B.dark }}>{session.store}</strong> — {doneCount} of {totalItems} items ticked.
+                  </div>
+                  <Input B={B} label="Your Full Name" value={staffName} onChange={setStaffName} placeholder="e.g. Sam Taylor" />
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Job Role</div>
+                    <select value={staffRole} onChange={e => setStaffRole(e.target.value)}
+                      style={{ width: "100%", padding: "10px 12px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", fontFamily: B.bfont, outline: "none", borderRadius: 2 }}>
+                      <option value="">Select your role…</option>
+                      {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+                    </select>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+                    <Btn B={B} variant="ghost" small onClick={() => setCompleteOpen(false)}>Cancel</Btn>
+                    <Btn B={B} onClick={submitCompletion} style={{ flex: 1, justifyContent: "center" }}>Submit Completion</Btn>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* FEEDBACK */}
+        {content.feedbackSection.show && (
+          <div id="section-feedback" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
+            <SectionHeader step={content.feedbackSection.step} title={content.feedbackSection.title} />
+            <FeedbackForm content={content} B={B} />
+          </div>
+        )}
+
+      </div>
+
+      {/* Footer */}
+      <div style={{ background: B.dark, color: B.silver + "80", textAlign: "center", padding: "22px 40px", fontSize: 12 }}>
+        {content.footer.text} ·{" "}
+        <a href={content.footer.websiteUrl} target="_blank" rel="noreferrer" style={{ color: B.gold, textDecoration: "none" }}>{content.footer.websiteText}</a>{" "}
+        · {content.footer.contactName} <a href={`tel:${(content.footer.contactPhone||"").replace(/\s/g,"")}`} style={{ color: B.gold, textDecoration: "none" }}>{content.footer.contactPhone}</a>
+      </div>
+
+      {activeVideo && <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} onWatch={onVideoWatch} B={B} />}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+// STAFF CODE CHANGER
+// ════════════════════════════════════════════════════════════════════
+function StaffCodeChanger({ current, onSave, B }) {
+  const [cur, setCur] = useState("");
+  const [nw, setNw] = useState("");
+  const [con, setCon] = useState("");
+  const [msg, setMsg] = useState(null);
+
+  function change() {
+    if (cur !== current) { setMsg({ ok: false, text: "Current staff code is incorrect." }); return; }
+    if (nw.length < 6) { setMsg({ ok: false, text: "New code must be at least 6 characters." }); return; }
+    if (nw !== con) { setMsg({ ok: false, text: "New codes do not match." }); return; }
+    onSave(nw);
+    setCur(""); setNw(""); setCon("");
+    setMsg({ ok: true, text: "Staff code updated to: " + nw });
+  }
+
+  return (
+    <div>
+      <Input B={B} label="Current Staff Code" value={cur} onChange={setCur} type="password" />
+      <Input B={B} label="New Staff Code" value={nw} onChange={setNw} type="password" hint="Minimum 6 characters" />
+      <Input B={B} label="Confirm New Code" value={con} onChange={setCon} type="password" />
+      <Btn B={B} onClick={change} style={{ width: "100%", justifyContent: "center" }}>Update Staff Code</Btn>
+      {msg && (
+        <div style={{ marginTop: 10, padding: "10px 12px", fontSize: 13, background: msg.ok ? "#f0f7ee" : "#fff5f5", borderLeft: `3px solid ${msg.ok ? "#5a9e4a" : "#c0392b"}`, color: msg.ok ? "#3a6630" : "#a33" }}>
+          {msg.ok ? "✓" : "✕"} {msg.text}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════
+// ADMIN PANEL
+// ════════════════════════════════════════════════════════════════════
+function AdminPanel({ content, onSave, onClose, logins, videoStats, completions = [], B }) {
+  const [tab, setTab] = useState("analytics");
+  const [draft, setDraft] = useState(JSON.parse(JSON.stringify(content)));
+  const [toast, setToast] = useState("");
+
+  // Apply theme live as user edits
+  useEffect(() => { applyTheme(draft.theme); }, [draft.theme]);
+
+  function showToast(msg) { setToast(msg); setTimeout(() => setToast(""), 2800); }
+  function up(key, val) { setDraft(d => ({ ...d, [key]: val })); }
+  function upDeep(path, val) {
+    setDraft(d => {
+      const cp = JSON.parse(JSON.stringify(d));
+      const parts = path.split(".");
+      let cur = cp;
+      for (let i = 0; i < parts.length - 1; i++) cur = cur[parts[i]];
+      cur[parts[parts.length - 1]] = val;
+      return cp;
+    });
+  }
+  async function saveAll() {
+    const result = await onSave(draft);
+    if (result && result.ok === false) {
+      if (result.quota) {
+        alert("⚠ Save failed — browser storage is full.\n\nThis usually means too many uploaded PDFs/images. Fix:\n• Clear large uploads (use the Clear button on thumbnails)\n• For PDFs, drop the file into the pdfs/ folder and type 'pdfs/FILENAME.pdf' in the field instead of uploading\n• Smaller images work better as thumbnails (under 200KB)");
+      } else {
+        alert("Save failed: " + (result.message || "unknown error"));
+      }
+    } else {
+      showToast("All changes saved! (" + Math.round(storageBytes()/1024) + "KB used)");
+    }
+  }
+  function resetTheme() {
+    upDeep("theme", JSON.parse(JSON.stringify(DEFAULT_CONTENT.theme)));
+    showToast("Theme reset to brand defaults");
+  }
+
+  // Generic list editors
+  function listAdd(path, item) { upDeep(path, [...path.split(".").reduce((o, k) => o[k], draft), item]); }
+  function listRemove(path, idx) {
+    const arr = [...path.split(".").reduce((o, k) => o[k], draft)];
+    arr.splice(idx, 1);
+    upDeep(path, arr);
+  }
+  function listMove(path, idx, dir) {
+    const arr = [...path.split(".").reduce((o, k) => o[k], draft)];
+    const j = idx + dir;
+    if (j < 0 || j >= arr.length) return;
+    [arr[idx], arr[j]] = [arr[j], arr[idx]];
+    upDeep(path, arr);
+  }
+  function listSet(path, idx, key, val) {
+    const arr = [...path.split(".").reduce((o, k) => o[k], draft)];
+    arr[idx] = { ...arr[idx], [key]: val };
+    upDeep(path, arr);
+  }
+
+  // Analytics calc
+  const loginsByStore = {};
+  STORES.forEach(s => { loginsByStore[s] = 0; });
+  logins.forEach(l => { if (loginsByStore[l.store] !== undefined) loginsByStore[l.store]++; });
+  const totalLogins = logins.length;
+  const last7 = logins.filter(l => Date.now() - l.ts < 7 * 86400000).length;
+  const activeStores = Object.values(loginsByStore).filter(v => v > 0).length;
+
+  const tabs = [
+    { id: "analytics", label: "Analytics" },
+    { id: "theme",     label: "Theme" },
+    { id: "login",     label: "Login" },
+    { id: "hero",      label: "Hero" },
+    { id: "videos",    label: "Videos" },
+    { id: "downloads", label: "Downloads" },
+    { id: "complaint", label: "Complaint" },
+    { id: "procedures", label: "Procedures" },
+    { id: "contacts",  label: "Contacts" },
+    { id: "checklist", label: "Checklist" },
+    { id: "feedback",  label: "Feedback" },
+    { id: "footer",    label: "Footer" },
+    { id: "security",  label: "Security" },
+  ];
+
+  const Section = ({ title }) => (
+    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: B.dark, margin: "22px 0 12px", paddingBottom: 7, borderBottom: `1px solid ${B.silver}` }}>{title}</div>
+  );
+  const Note = ({ children }) => (
+    <div style={{ fontSize: 12, color: "#666", background: B.cream, padding: "10px 12px", borderLeft: `3px solid ${B.gold}`, marginBottom: 16, lineHeight: 1.6 }}>{children}</div>
+  );
+  const Toggle = ({ on, onChange, label }) => (
+    <label style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, cursor: "pointer" }}>
+      <span style={{ position: "relative", width: 36, height: 20, background: on ? B.dark : B.silver, borderRadius: 10, transition: "background 0.2s", flexShrink: 0 }}>
+        <span style={{ position: "absolute", top: 2, left: on ? 18 : 2, width: 16, height: 16, background: "#fff", borderRadius: "50%", transition: "left 0.2s" }} />
+      </span>
+      <input type="checkbox" checked={on} onChange={e => onChange(e.target.checked)} style={{ display: "none" }} />
+      <span style={{ fontSize: 13, color: B.dark, fontWeight: 500 }}>{label}</span>
+    </label>
+  );
+
+  // Color picker row
+  const ColorRow = ({ label, path }) => {
+    const val = path.split(".").reduce((o, k) => o[k], draft);
+    return (
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>{label}</div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <input type="color" value={val} onChange={e => upDeep(path, e.target.value)}
+            style={{ width: 50, height: 34, padding: 2, border: `1.5px solid ${B.silver}`, cursor: "pointer", background: "#fff" }} />
+          <input type="text" value={val} onChange={e => upDeep(path, e.target.value)}
+            style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", outline: "none", borderRadius: 2, fontFamily: "monospace" }} />
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.3)", zIndex: 400 }} />
+      <div className="slide-in" style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: 460, maxWidth: "100vw", background: "#fff", boxShadow: "-6px 0 40px rgba(0,0,0,0.2)", zIndex: 500, display: "flex", flexDirection: "column" }}>
+        <div style={{ background: B.dark, padding: "16px 22px", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#fff" }}>Admin Editor</div>
+            <div style={{ fontSize: 11, color: B.silver, marginTop: 2 }}>Krystal Adamson · Stone &amp; Outdoor</div>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>✕</button>
+        </div>
+
+        <div style={{ display: "flex", borderBottom: `1px solid ${B.silver}`, flexShrink: 0, overflowX: "auto" }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)} style={{
+              flex: "0 0 auto", padding: "10px 14px", fontSize: 10, fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase",
+              cursor: "pointer", border: "none", background: "none", fontFamily: B.bfont,
+              color: tab === t.id ? B.dark : "#999", borderBottom: tab === t.id ? `2px solid ${B.gold}` : "2px solid transparent",
+              transition: "all 0.2s", whiteSpace: "nowrap"
+            }}>{t.label}</button>
+          ))}
+        </div>
+
+        <div style={{ flex: 1, overflowY: "auto", padding: 20 }}>
+
+          {/* ANALYTICS */}
+          {tab === "analytics" && (
+            <div>
+              <Note>Live usage data from all 11 Nuway stores. Each store login is recorded, plus video views.</Note>
+              <Section title="Overview" />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 20 }}>
+                {[
+                  { label: "Total Logins", value: totalLogins },
+                  { label: "Last 7 Days", value: last7 },
+                  { label: "Active Stores", value: `${activeStores}/11` },
+                ].map(m => (
+                  <div key={m.label} style={{ background: B.cream, padding: "12px 10px", textAlign: "center", borderRadius: 2 }}>
+                    <div style={{ fontSize: 22, fontWeight: 600, color: B.dark }}>{m.value}</div>
+                    <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 2 }}>{m.label}</div>
+                  </div>
+                ))}
+              </div>
+              <Section title="Logins by Store" />
+              {STORES.map(s => {
+                const count = loginsByStore[s] || 0;
+                const pct = totalLogins ? Math.round((count / Math.max(...Object.values(loginsByStore), 1)) * 100) : 0;
+                return (
+                  <div key={s} style={{ marginBottom: 10 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, marginBottom: 4 }}>
+                      <span style={{ color: B.dark, fontWeight: count > 0 ? 600 : 400 }}>{s}</span>
+                      <span style={{ color: count > 0 ? B.dark : "#bbb", fontWeight: 600 }}>{count}</span>
+                    </div>
+                    <div style={{ background: B.silver, height: 5, borderRadius: 2 }}>
+                      <div style={{ width: `${pct}%`, height: "100%", background: B.gold, borderRadius: 2, transition: "width 0.6s" }} />
+                    </div>
+                  </div>
+                );
+              })}
+              <Section title="Video Watch Counts" />
+              {draft.videos.map(v => {
+                const count = videoStats[v.id] || 0;
+                return (
+                  <div key={v.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: `1px solid ${B.cream}`, fontSize: 13 }}>
+                    <span style={{ color: B.dark }}>{v.title}</span>
+                    <span style={{ fontWeight: 600, color: count > 0 ? B.dark : "#bbb", background: B.cream, padding: "2px 10px", borderRadius: 20, fontSize: 12 }}>{count} views</span>
+                  </div>
+                );
+              })}
+              <Section title="Training Completions" />
+              {completions.length === 0 && <div style={{ fontSize: 12, color: "#999", marginBottom: 14 }}>No completions logged yet. Staff submit their name &amp; role from the bottom of the Checklist section.</div>}
+              {completions.length > 0 && (
+                <div style={{ background: B.cream, padding: "10px 12px", marginBottom: 12, fontSize: 12, color: B.dark, borderLeft: `3px solid ${B.gold}` }}>
+                  <strong>{completions.length}</strong> staff member{completions.length === 1 ? "" : "s"} marked complete · across <strong>{new Set(completions.map(c => c.store)).size}</strong> store{new Set(completions.map(c => c.store)).size === 1 ? "" : "s"}
+                </div>
+              )}
+              {[...completions].reverse().map((c, i) => (
+                <div key={i} style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: "10px 12px", marginBottom: 8, borderRadius: 2 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                    <span style={{ color: B.dark, fontWeight: 600, fontSize: 13 }}>{c.name}</span>
+                    <span style={{ fontSize: 10, letterSpacing: "0.08em", color: B.gold, textTransform: "uppercase", fontWeight: 700 }}>{c.role}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#888" }}>
+                    <span>{c.store}</span>
+                    <span>{c.itemsDone}/{c.itemsTotal} items · {new Date(c.ts).toLocaleString("en-AU", { day: "2-digit", month: "short", year: "numeric" })}</span>
+                  </div>
+                </div>
+              ))}
+              <Section title="Recent Logins" />
+              {logins.length === 0 && <div style={{ fontSize: 12, color: "#999" }}>No logins recorded yet.</div>}
+              {[...logins].reverse().slice(0, 30).map((l, i) => (
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: `1px solid ${B.cream}`, fontSize: 12 }}>
+                  <span style={{ color: B.dark, fontWeight: 500 }}>{l.store}</span>
+                  <span style={{ color: "#999" }}>{new Date(l.ts).toLocaleString("en-AU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* THEME */}
+          {tab === "theme" && (
+            <div>
+              <Note>Colours and fonts update live as you change them. Click "Save All Changes" at the bottom to make changes permanent.</Note>
+              <Section title="Logo & Header" />
+              <Input B={B} label="Logo Image URL" value={draft.logoUrl} onChange={v => up("logoUrl", v)} placeholder="https://your-logo.com/logo.svg" />
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Logo Height in Header — {draft.logoHeight || 140}px <span style={{ color: "#999", fontWeight: 400 }}>(~{Math.round((draft.logoHeight || 140) / 96 * 10) / 10}″)</span></div>
+                <input type="range" min="40" max="240" value={draft.logoHeight || 140} onChange={e => up("logoHeight", parseInt(e.target.value))} style={{ width: "100%", accentColor: B.dark }} />
+              </div>
+              {draft.logoUrl && (
+                <div style={{ background: draft.theme.colorDark, padding: 14, textAlign: "center", marginBottom: 14 }}>
+                  <img src={draft.logoUrl} alt="Logo preview" style={{ height: draft.logoHeight || 140, maxWidth: "100%", objectFit: "contain" }} />
+                </div>
+              )}
+              <Section title="Social Links in Header" />
+              <Input B={B} label="Facebook URL" value={(draft.social && draft.social.facebook) || ""} onChange={v => upDeep("social.facebook", v)} placeholder="https://www.facebook.com/..." />
+              <Input B={B} label="Instagram URL" value={(draft.social && draft.social.instagram) || ""} onChange={v => upDeep("social.instagram", v)} placeholder="https://www.instagram.com/..." />
+              <Input B={B} label="Website URL" value={(draft.social && draft.social.website) || ""} onChange={v => upDeep("social.website", v)} placeholder="https://www.stoneoutdoor.com.au" />
+              <div style={{ fontSize: 11, color: "#999", marginBottom: 14, marginTop: -8 }}>Clear a field to hide that icon from the header.</div>
+              <Section title="Colours" />
+              <ColorRow label="Primary Dark — header, buttons, footer" path="theme.colorDark" />
+              <ColorRow label="Background Cream" path="theme.colorCream" />
+              <ColorRow label="Accent Gold — highlights, links" path="theme.colorGold" />
+              <ColorRow label="Border / Silver" path="theme.colorSilver" />
+              <ColorRow label="Card Background" path="theme.colorWhite" />
+              <ColorRow label="Body Text" path="theme.colorText" />
+              <Btn B={B} variant="ghost" small onClick={resetTheme} style={{ marginTop: 4 }}>
+                <Icon.reset /> Reset to Brand Defaults
+              </Btn>
+
+              <Section title="Fonts" />
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Heading Font</div>
+                <select value={draft.theme.headingFont} onChange={e => upDeep("theme.headingFont", e.target.value)}
+                  style={{ width: "100%", padding: "9px 12px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", outline: "none", borderRadius: 2, fontFamily: B.bfont }}>
+                  {FONTS.map(f => <option key={f.v} value={f.v}>{f.n}</option>)}
+                </select>
+                <div style={{ marginTop: 8, padding: "10px 12px", background: B.cream, fontFamily: draft.theme.headingFont, fontSize: 18, color: B.dark, fontWeight: 600 }}>
+                  {draft.hero.title.slice(0, 60)}…
+                </div>
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Body Font</div>
+                <select value={draft.theme.bodyFont} onChange={e => upDeep("theme.bodyFont", e.target.value)}
+                  style={{ width: "100%", padding: "9px 12px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", outline: "none", borderRadius: 2, fontFamily: B.bfont }}>
+                  {FONTS.map(f => <option key={f.v} value={f.v}>{f.n}</option>)}
+                </select>
+                <div style={{ marginTop: 8, padding: "10px 12px", background: B.cream, fontFamily: draft.theme.bodyFont, fontSize: 13, color: B.dark }}>
+                  Sample body text shows here in the selected font.
+                </div>
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>
+                  Base Font Size — {draft.theme.fontSize}px
+                </div>
+                <input type="range" min="13" max="19" value={draft.theme.fontSize}
+                  onChange={e => upDeep("theme.fontSize", parseInt(e.target.value))}
+                  style={{ width: "100%", accentColor: B.dark }} />
+              </div>
+            </div>
+          )}
+
+          {/* LOGIN */}
+          {tab === "login" && (
+            <div>
+              <Note>Edit the wording on the login screen.</Note>
+              <Input B={B} label="Badge Text (under logo)" value={draft.login.badge} onChange={v => upDeep("login.badge", v)} />
+              <Input B={B} label="Welcome Heading" value={draft.login.welcomeTitle} onChange={v => upDeep("login.welcomeTitle", v)} />
+              <Input B={B} label="Welcome Description" value={draft.login.welcomeText} onChange={v => upDeep("login.welcomeText", v)} rows={3} />
+              <Input B={B} label="Footer Help Text" value={draft.login.needAccessText} onChange={v => upDeep("login.needAccessText", v)} />
+              <Input B={B} label="Footer Help Phone" value={draft.login.needAccessNumber} onChange={v => upDeep("login.needAccessNumber", v)} />
+            </div>
+          )}
+
+          {/* HERO */}
+          {tab === "hero" && (
+            <div>
+              <Note>The big banner at the top of the portal.</Note>
+              <Input B={B} label="Eyebrow Label" value={draft.hero.eyebrow} onChange={v => upDeep("hero.eyebrow", v)} hint="Small text above the main heading" />
+              <Input B={B} label="Main Heading" value={draft.hero.title} onChange={v => upDeep("hero.title", v)} rows={2} />
+              <Input B={B} label="Description" value={draft.hero.description} onChange={v => upDeep("hero.description", v)} rows={3} />
+              <Section title="Hero Tags (chips below description)" />
+              <Note>Drag-style reorder with the up/down arrows. Each tag scrolls to a section when clicked. Tag wording is matched to the section (e.g. "Procedures" → Procedures section).</Note>
+              {draft.hero.tags.map((t, i) => (
+                <div key={i} style={{ display: "flex", gap: 6, marginBottom: 8, alignItems: "center" }}>
+                  <input value={t} onChange={e => {
+                    const arr = [...draft.hero.tags]; arr[i] = e.target.value; upDeep("hero.tags", arr);
+                  }} style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 13, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                  <button disabled={i === 0} onClick={() => { const arr = [...draft.hero.tags]; [arr[i-1], arr[i]] = [arr[i], arr[i-1]]; upDeep("hero.tags", arr); }} style={{ background: "none", border: `1.5px solid ${B.silver}`, color: i === 0 ? "#ccc" : B.dark, cursor: i === 0 ? "default" : "pointer", padding: "6px 8px" }}><Icon.up /></button>
+                  <button disabled={i === draft.hero.tags.length - 1} onClick={() => { const arr = [...draft.hero.tags]; [arr[i+1], arr[i]] = [arr[i], arr[i+1]]; upDeep("hero.tags", arr); }} style={{ background: "none", border: `1.5px solid ${B.silver}`, color: i === draft.hero.tags.length - 1 ? "#ccc" : B.dark, cursor: i === draft.hero.tags.length - 1 ? "default" : "pointer", padding: "6px 8px" }}><Icon.down /></button>
+                  <button onClick={() => upDeep("hero.tags", draft.hero.tags.filter((_, j) => j !== i))} style={{ background: "none", border: `1.5px solid ${B.silver}`, color: "#c0392b", cursor: "pointer", padding: "6px 8px" }}><Icon.trash /></button>
+                </div>
+              ))}
+              <Btn B={B} variant="outline" small onClick={() => upDeep("hero.tags", [...draft.hero.tags, "New tag"])}><Icon.plus /> Add tag</Btn>
+            </div>
+          )}
+
+          {/* VIDEOS */}
+          {tab === "videos" && (
+            <div>
+              <Toggle on={draft.videosSection.show} onChange={v => upDeep("videosSection.show", v)} label="Show Videos section" />
+              <Input B={B} label="Section Step Label" value={draft.videosSection.step} onChange={v => upDeep("videosSection.step", v)} />
+              <Input B={B} label="Section Title" value={draft.videosSection.title} onChange={v => upDeep("videosSection.title", v)} />
+              <Note>Add YouTube, Vimeo, or Google Drive share links. Leave URL blank to show "coming soon" placeholder.</Note>
+              {draft.videos.map((v, i) => (
+                <div key={v.id} style={{ background: B.cream, padding: 14, marginBottom: 14, borderRadius: 2 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: B.dark }}>Video {i + 1}</div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button disabled={i === 0} onClick={() => listMove("videos", i, -1)} style={{ background: "none", border: "none", color: i === 0 ? "#ccc" : B.dark, cursor: i === 0 ? "default" : "pointer" }}><Icon.up /></button>
+                      <button disabled={i === draft.videos.length - 1} onClick={() => listMove("videos", i, 1)} style={{ background: "none", border: "none", color: i === draft.videos.length - 1 ? "#ccc" : B.dark, cursor: i === draft.videos.length - 1 ? "default" : "pointer" }}><Icon.down /></button>
+                      <button onClick={() => listRemove("videos", i)} style={{ background: "none", border: "none", color: "#c0392b", cursor: "pointer" }}><Icon.trash /></button>
+                    </div>
+                  </div>
+                  <Input B={B} label="Title" value={v.title} onChange={val => listSet("videos", i, "title", val)} />
+                  <Input B={B} label="Tag / Audience" value={v.tag} onChange={val => listSet("videos", i, "tag", val)} />
+                  <Input B={B} label="Description" value={v.desc} onChange={val => listSet("videos", i, "desc", val)} rows={2} />
+                  <Input B={B} label="Video URL" value={v.url} onChange={val => listSet("videos", i, "url", val)} placeholder="https://youtube.com/..." />
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Thumbnail Image (optional)</div>
+                  <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+                    <input type="text" value={v.thumbnail || ""} onChange={e => listSet("videos", i, "thumbnail", e.target.value)} placeholder="Image URL or click Upload"
+                      style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                    <label style={{ display: "inline-flex", alignItems: "center", padding: "0 12px", border: `1.5px solid ${B.dark}`, background: B.dark, color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer" }}>
+                      Upload
+                      <input type="file" accept="image/*" style={{ display: "none" }}
+                        onChange={e => { const f = e.target.files[0]; if (!f) return; if (f.size > 2*1024*1024) { alert("Image too large (max 2MB)."); return; } const r = new FileReader(); r.onload = () => listSet("videos", i, "thumbnail", r.result); r.readAsDataURL(f); e.target.value = ""; }} />
+                    </label>
+                    {v.thumbnail && <button onClick={() => listSet("videos", i, "thumbnail", "")} style={{ padding: "0 10px", background: "none", border: `1.5px solid ${B.silver}`, color: "#c0392b", cursor: "pointer", fontSize: 11 }}>Clear</button>}
+                  </div>
+                  {v.thumbnail && <div style={{ marginBottom: 14, padding: 8, background: B.cream, fontSize: 11, color: B.dark }}>Preview: <img src={v.thumbnail} alt="thumb" style={{ maxWidth: "100%", maxHeight: 80, marginTop: 6, display: "block", border: `1px solid ${B.silver}` }} /></div>}
+                </div>
+              ))}
+              <Btn B={B} onClick={() => listAdd("videos", { id: "v" + Date.now(), title: "New Video", tag: "All Staff", desc: "", url: "" })} variant="outline" style={{ width: "100%", justifyContent: "center" }}>
+                <Icon.plus /> Add Video
+              </Btn>
+            </div>
+          )}
+
+          {/* DOWNLOADS */}
+          {tab === "downloads" && (
+            <div>
+              <Toggle on={draft.downloadsSection.show} onChange={v => upDeep("downloadsSection.show", v)} label="Show Downloads section" />
+              <Input B={B} label="Section Step Label" value={draft.downloadsSection.step} onChange={v => upDeep("downloadsSection.step", v)} />
+              <Input B={B} label="Section Title" value={draft.downloadsSection.title} onChange={v => upDeep("downloadsSection.title", v)} />
+              <Input B={B} label="Warning Banner Text" value={draft.downloadsSection.warning || ""} onChange={v => upDeep("downloadsSection.warning", v)} rows={2} />
+              <Section title="Bulk Counter Folder PDF (one button above the product sheets)" />
+              <Input B={B} label="Button Label" value={draft.downloadsSection.bulkPdfLabel || ""} onChange={v => upDeep("downloadsSection.bulkPdfLabel", v)} placeholder="Full Counter Folder PDF" />
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>PDF File or URL</div>
+              <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+                <input type="text" value={draft.downloadsSection.bulkPdfUrl || ""} onChange={e => upDeep("downloadsSection.bulkPdfUrl", e.target.value)} placeholder="pdfs/COUNTER_FOLDER.pdf or a URL"
+                  style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                <label style={{ display: "inline-flex", alignItems: "center", padding: "0 12px", border: `1.5px solid ${B.dark}`, background: B.dark, color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer" }}>
+                  Upload PDF
+                  <input type="file" accept="application/pdf" style={{ display: "none" }}
+                    onChange={e => { const f = e.target.files[0]; if (!f) return; if (f.size > 4*1024*1024) { alert("PDF too large (max 4MB upload). For larger files (like the full Counter Folder), drop it in pdfs/ folder and type 'pdfs/FILENAME.pdf' in the field."); return; } const r = new FileReader(); r.onload = () => setDraft(d => { const cp = JSON.parse(JSON.stringify(d)); cp.downloadsSection.bulkPdfUrl = r.result; cp.downloadsSection.bulkPdfFilename = f.name; return cp; }); r.readAsDataURL(f); e.target.value = ""; }} />
+                </label>
+                {draft.downloadsSection.bulkPdfUrl && <button onClick={() => upDeep("downloadsSection.bulkPdfUrl", "")} style={{ padding: "0 10px", background: "none", border: `1.5px solid ${B.silver}`, color: "#c0392b", cursor: "pointer", fontSize: 11 }}>Clear</button>}
+              </div>
+              <Section title="Individual Product Sheets" />
+              <Note>Paste Google Drive or Dropbox share links, or "pdfs/FILENAME.pdf" for files in your pdfs folder.</Note>
+              {draft.downloads.map((d, i) => (
+                <div key={d.id} style={{ background: B.cream, padding: 14, marginBottom: 14, borderRadius: 2 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: B.dark }}>Resource {i + 1}</div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button disabled={i === 0} onClick={() => listMove("downloads", i, -1)} style={{ background: "none", border: "none", color: i === 0 ? "#ccc" : B.dark, cursor: i === 0 ? "default" : "pointer" }}><Icon.up /></button>
+                      <button disabled={i === draft.downloads.length - 1} onClick={() => listMove("downloads", i, 1)} style={{ background: "none", border: "none", color: i === draft.downloads.length - 1 ? "#ccc" : B.dark, cursor: i === draft.downloads.length - 1 ? "default" : "pointer" }}><Icon.down /></button>
+                      <button onClick={() => listRemove("downloads", i)} style={{ background: "none", border: "none", color: "#c0392b", cursor: "pointer" }}><Icon.trash /></button>
+                    </div>
+                  </div>
+                  <Input B={B} label="Title" value={d.title} onChange={val => listSet("downloads", i, "title", val)} />
+                  <Input B={B} label="Description" value={d.desc} onChange={val => listSet("downloads", i, "desc", val)} rows={2} />
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>PDF File or URL</div>
+                  <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                    <input type="text" value={d.url} onChange={e => listSet("downloads", i, "url", e.target.value)} placeholder="pdfs/FILENAME.pdf or paste a URL"
+                      style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                    <label style={{ display: "inline-flex", alignItems: "center", padding: "0 12px", border: `1.5px solid ${B.dark}`, background: B.dark, color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer" }}>
+                      Upload PDF
+                      <input type="file" accept="application/pdf" style={{ display: "none" }}
+                        onChange={e => { const f = e.target.files[0]; if (!f) return; if (f.size > 4*1024*1024) { alert("PDF too large (max 4MB for upload). For larger files, drop it in the pdfs/ folder and type 'pdfs/FILENAME.pdf' in the field."); return; } const r = new FileReader(); r.onload = () => setDraft(d => { const cp = JSON.parse(JSON.stringify(d)); cp.downloads[i] = { ...cp.downloads[i], url: r.result, filename: f.name }; return cp; }); r.readAsDataURL(f); e.target.value = ""; }} />
+                    </label>
+                  </div>
+                  {d.url && d.url.startsWith("data:") && <div style={{ fontSize: 11, color: B.gold, marginBottom: 8 }}>✓ PDF uploaded ({d.filename || "file"}) — embedded in your save</div>}
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5, marginTop: 8 }}>Background Image (optional — appears faded behind text)</div>
+                  <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                    <input type="text" value={d.thumbnail || ""} onChange={e => listSet("downloads", i, "thumbnail", e.target.value)} placeholder="Image URL or click Upload"
+                      style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                    <label style={{ display: "inline-flex", alignItems: "center", padding: "0 12px", border: `1.5px solid ${B.dark}`, background: B.dark, color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer" }}>
+                      Upload Image
+                      <input type="file" accept="image/*" style={{ display: "none" }}
+                        onChange={e => { const f = e.target.files[0]; if (!f) return; if (f.size > 2*1024*1024) { alert("Image too large (max 2MB)."); return; } const r = new FileReader(); r.onload = () => setDraft(d2 => { const cp = JSON.parse(JSON.stringify(d2)); cp.downloads[i] = { ...cp.downloads[i], thumbnail: r.result }; return cp; }); r.readAsDataURL(f); e.target.value = ""; }} />
+                    </label>
+                    {d.thumbnail && <button onClick={() => listSet("downloads", i, "thumbnail", "")} style={{ padding: "0 10px", background: "none", border: `1.5px solid ${B.silver}`, color: "#c0392b", cursor: "pointer", fontSize: 11 }}>Clear</button>}
+                  </div>
+                  {d.thumbnail && <div style={{ marginBottom: 8, padding: 6, background: "#fff", border: `1px solid ${B.silver}` }}><img src={d.thumbnail} alt="bg preview" style={{ maxWidth: "100%", maxHeight: 60, display: "block" }} /></div>}
+                </div>
+              ))}
+              <Btn B={B} onClick={() => listAdd("downloads", { id: "d" + Date.now(), title: "New Resource", desc: "", url: "", thumbnail: "" })} variant="outline" style={{ width: "100%", justifyContent: "center" }}>
+                <Icon.plus /> Add Resource
+              </Btn>
+            </div>
+          )}
+
+          {/* COMPLAINT */}
+          {tab === "complaint" && (
+            <div>
+              <Toggle on={draft.complaintSection.show} onChange={v => upDeep("complaintSection.show", v)} label="Show Complaint Procedure section" />
+              <Input B={B} label="Section Step Label" value={draft.complaintSection.step} onChange={v => upDeep("complaintSection.step", v)} />
+              <Input B={B} label="Section Title" value={draft.complaintSection.title} onChange={v => upDeep("complaintSection.title", v)} />
+              <Input B={B} label="Banner Text" value={draft.complaintSection.banner} onChange={v => upDeep("complaintSection.banner", v)} rows={2} />
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Top Border Colour (urgency indicator)</div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <input type="color" value={draft.complaintSection.borderColor || "#c0392b"} onChange={e => upDeep("complaintSection.borderColor", e.target.value)}
+                    style={{ width: 50, height: 34, padding: 2, border: `1.5px solid ${B.silver}`, cursor: "pointer", background: "#fff" }} />
+                  <input type="text" value={draft.complaintSection.borderColor || "#c0392b"} onChange={e => upDeep("complaintSection.borderColor", e.target.value)}
+                    style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", outline: "none", borderRadius: 2, fontFamily: "monospace" }} />
+                  <button onClick={() => upDeep("complaintSection.borderColor", "#c0392b")} style={{ padding: "8px 12px", background: "none", border: `1.5px solid ${B.silver}`, fontSize: 11, cursor: "pointer", color: B.dark }}>Red</button>
+                  <button onClick={() => upDeep("complaintSection.borderColor", B.gold)} style={{ padding: "8px 12px", background: "none", border: `1.5px solid ${B.silver}`, fontSize: 11, cursor: "pointer", color: B.dark }}>Gold</button>
+                  <button onClick={() => upDeep("complaintSection.borderColor", B.dark)} style={{ padding: "8px 12px", background: "none", border: `1.5px solid ${B.silver}`, fontSize: 11, cursor: "pointer", color: B.dark }}>Dark</button>
+                </div>
+                <div style={{ fontSize: 11, color: "#999", marginTop: 4 }}>Change to red for urgent, gold for notice, dark for standard.</div>
+              </div>
+              <Section title="Procedure Steps" />
+              {draft.complaintSection.steps.map((s, i) => (
+                <div key={i} style={{ background: B.cream, padding: 12, marginBottom: 10, borderRadius: 2 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: B.gold }}>STEP {String(i + 1).padStart(2, "0")}</div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button disabled={i === 0} onClick={() => listMove("complaintSection.steps", i, -1)} style={{ background: "none", border: "none", color: i === 0 ? "#ccc" : B.dark, cursor: i === 0 ? "default" : "pointer" }}><Icon.up /></button>
+                      <button disabled={i === draft.complaintSection.steps.length - 1} onClick={() => listMove("complaintSection.steps", i, 1)} style={{ background: "none", border: "none", color: i === draft.complaintSection.steps.length - 1 ? "#ccc" : B.dark, cursor: i === draft.complaintSection.steps.length - 1 ? "default" : "pointer" }}><Icon.down /></button>
+                      <button onClick={() => listRemove("complaintSection.steps", i)} style={{ background: "none", border: "none", color: "#c0392b", cursor: "pointer" }}><Icon.trash /></button>
+                    </div>
+                  </div>
+                  <textarea value={s} onChange={e => {
+                    const arr = [...draft.complaintSection.steps]; arr[i] = e.target.value; upDeep("complaintSection.steps", arr);
+                  }} rows={3} style={{ width: "100%", padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 13, fontFamily: B.bfont, background: "#fff", borderRadius: 2, resize: "vertical" }} />
+                </div>
+              ))}
+              <Btn B={B} variant="outline" onClick={() => listAdd("complaintSection.steps", "New step.")}><Icon.plus /> Add step</Btn>
+            </div>
+          )}
+
+          {/* PROCEDURES */}
+          {tab === "procedures" && draft.proceduresSection && (
+            <div>
+              <Toggle on={draft.proceduresSection.show} onChange={v => upDeep("proceduresSection.show", v)} label="Show Procedures section" />
+              <Input B={B} label="Section Step Label" value={draft.proceduresSection.step} onChange={v => upDeep("proceduresSection.step", v)} />
+              <Input B={B} label="Section Title" value={draft.proceduresSection.title} onChange={v => upDeep("proceduresSection.title", v)} />
+              <Input B={B} label="Section Note (above cards)" value={draft.proceduresSection.note} onChange={v => upDeep("proceduresSection.note", v)} rows={2} />
+              <Section title="Procedure Documents" />
+              <Note>Click "Upload PDF" to attach a procedure document, or paste a URL. View button shows for any link; Print/Save shows only for PDFs.</Note>
+              {(draft.procedures || []).map((p, i) => (
+                <div key={p.id} style={{ background: B.cream, padding: 14, marginBottom: 14, borderRadius: 2 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: B.dark }}>Procedure {i + 1}</div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button disabled={i === 0} onClick={() => listMove("procedures", i, -1)} style={{ background: "none", border: "none", color: i === 0 ? "#ccc" : B.dark, cursor: i === 0 ? "default" : "pointer" }}><Icon.up /></button>
+                      <button disabled={i === draft.procedures.length - 1} onClick={() => listMove("procedures", i, 1)} style={{ background: "none", border: "none", color: i === draft.procedures.length - 1 ? "#ccc" : B.dark, cursor: i === draft.procedures.length - 1 ? "default" : "pointer" }}><Icon.down /></button>
+                      <button onClick={() => listRemove("procedures", i)} style={{ background: "none", border: "none", color: "#c0392b", cursor: "pointer" }}><Icon.trash /></button>
+                    </div>
+                  </div>
+                  <Input B={B} label="Title" value={p.title} onChange={val => listSet("procedures", i, "title", val)} />
+                  <Input B={B} label="Description" value={p.desc} onChange={val => listSet("procedures", i, "desc", val)} rows={2} />
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>PDF File or URL</div>
+                  <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                    <input type="text" value={p.url} onChange={e => listSet("procedures", i, "url", e.target.value)} placeholder="pdfs/FILENAME.pdf or paste a URL"
+                      style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                    <label style={{ display: "inline-flex", alignItems: "center", padding: "0 12px", border: `1.5px solid ${B.dark}`, background: B.dark, color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer" }}>
+                      Upload PDF
+                      <input type="file" accept="application/pdf" style={{ display: "none" }}
+                        onChange={e => { const f = e.target.files[0]; if (!f) return; if (f.size > 4*1024*1024) { alert("PDF too large (max 4MB upload). For larger files, drop it in the pdfs/ folder and type 'pdfs/FILENAME.pdf' in the field."); return; } const r = new FileReader(); r.onload = () => setDraft(d => { const cp = JSON.parse(JSON.stringify(d)); cp.procedures[i] = { ...cp.procedures[i], url: r.result, filename: f.name }; return cp; }); r.readAsDataURL(f); e.target.value = ""; }} />
+                    </label>
+                  </div>
+                  {p.url && p.url.startsWith("data:") && <div style={{ fontSize: 11, color: B.gold, marginBottom: 8 }}>✓ PDF uploaded ({p.filename || "file"}) — embedded in your save</div>}
+                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5, marginTop: 8 }}>Background Image (optional — appears faded behind text)</div>
+                  <div style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                    <input type="text" value={p.thumbnail || ""} onChange={e => listSet("procedures", i, "thumbnail", e.target.value)} placeholder="Image URL or click Upload"
+                      style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                    <label style={{ display: "inline-flex", alignItems: "center", padding: "0 12px", border: `1.5px solid ${B.dark}`, background: B.dark, color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer" }}>
+                      Upload Image
+                      <input type="file" accept="image/*" style={{ display: "none" }}
+                        onChange={e => { const f = e.target.files[0]; if (!f) return; if (f.size > 2*1024*1024) { alert("Image too large (max 2MB)."); return; } const r = new FileReader(); r.onload = () => setDraft(d2 => { const cp = JSON.parse(JSON.stringify(d2)); cp.procedures[i] = { ...cp.procedures[i], thumbnail: r.result }; return cp; }); r.readAsDataURL(f); e.target.value = ""; }} />
+                    </label>
+                    {p.thumbnail && <button onClick={() => listSet("procedures", i, "thumbnail", "")} style={{ padding: "0 10px", background: "none", border: `1.5px solid ${B.silver}`, color: "#c0392b", cursor: "pointer", fontSize: 11 }}>Clear</button>}
+                  </div>
+                  {p.thumbnail && <div style={{ marginBottom: 8, padding: 6, background: "#fff", border: `1px solid ${B.silver}` }}><img src={p.thumbnail} alt="bg preview" style={{ maxWidth: "100%", maxHeight: 60, display: "block" }} /></div>}
+                </div>
+              ))}
+              <Btn B={B} onClick={() => listAdd("procedures", { id: "p" + Date.now(), title: "New Procedure", desc: "", url: "", thumbnail: "" })} variant="outline" style={{ width: "100%", justifyContent: "center" }}>
+                <Icon.plus /> Add Procedure
+              </Btn>
+            </div>
+          )}
+
+          {/* CONTACTS */}
+          {tab === "contacts" && (
+            <div>
+              <Toggle on={draft.contactsSection.show} onChange={v => upDeep("contactsSection.show", v)} label="Show Contacts section" />
+              <Input B={B} label="Section Step Label" value={draft.contactsSection.step} onChange={v => upDeep("contactsSection.step", v)} />
+              <Input B={B} label="Section Title" value={draft.contactsSection.title} onChange={v => upDeep("contactsSection.title", v)} />
+              <Input B={B} label="Intro Text (italic line)" value={draft.contactsSection.intro || ""} onChange={v => upDeep("contactsSection.intro", v)} rows={2} />
+              <Section title="Contacts PDF (View/Print buttons under title)" />
+              <Input B={B} label="Button Label" value={draft.contactsSection.pdfLabel || ""} onChange={v => upDeep("contactsSection.pdfLabel", v)} placeholder="Full Contacts List PDF" />
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>PDF File or URL</div>
+              <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+                <input type="text" value={draft.contactsSection.pdfUrl || ""} onChange={e => upDeep("contactsSection.pdfUrl", e.target.value)} placeholder="pdfs/CONTACTS_LIST.pdf or a URL"
+                  style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                <label style={{ display: "inline-flex", alignItems: "center", padding: "0 12px", border: `1.5px solid ${B.dark}`, background: B.dark, color: "#fff", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer" }}>
+                  Upload PDF
+                  <input type="file" accept="application/pdf" style={{ display: "none" }}
+                    onChange={e => { const f = e.target.files[0]; if (!f) return; if (f.size > 4*1024*1024) { alert("PDF too large (max 4MB upload). For larger files, drop in pdfs/ folder and type 'pdfs/FILENAME.pdf' in the field."); return; } const r = new FileReader(); r.onload = () => setDraft(d => { const cp = JSON.parse(JSON.stringify(d)); cp.contactsSection.pdfUrl = r.result; cp.contactsSection.pdfFilename = f.name; return cp; }); r.readAsDataURL(f); e.target.value = ""; }} />
+                </label>
+                {draft.contactsSection.pdfUrl && <button onClick={() => upDeep("contactsSection.pdfUrl", "")} style={{ padding: "0 10px", background: "none", border: `1.5px solid ${B.silver}`, color: "#c0392b", cursor: "pointer", fontSize: 11 }}>Clear</button>}
+              </div>
+              {draft.contactsSection.pdfUrl && draft.contactsSection.pdfUrl.startsWith("data:") && <div style={{ fontSize: 11, color: B.gold, marginBottom: 8 }}>✓ PDF uploaded ({draft.contactsSection.pdfFilename || "file"}) — embedded in your save</div>}
+              <Section title="Featured Contact (your dark card)" />
+              <Input B={B} label="Tag" value={draft.contactsSection.featured.tag} onChange={v => upDeep("contactsSection.featured.tag", v)} />
+              <Input B={B} label="Name" value={draft.contactsSection.featured.name} onChange={v => upDeep("contactsSection.featured.name", v)} />
+              <Input B={B} label="Role / Description" value={draft.contactsSection.featured.role} onChange={v => upDeep("contactsSection.featured.role", v)} rows={2} />
+              <Input B={B} label="Mobile" value={draft.contactsSection.featured.mobile} onChange={v => upDeep("contactsSection.featured.mobile", v)} />
+              <Input B={B} label="Office Phone" value={draft.contactsSection.featured.office} onChange={v => upDeep("contactsSection.featured.office", v)} />
+              <Input B={B} label="Email" value={draft.contactsSection.featured.email} onChange={v => upDeep("contactsSection.featured.email", v)} />
+              <Input B={B} label="Website Display Text" value={draft.contactsSection.featured.website} onChange={v => upDeep("contactsSection.featured.website", v)} />
+              <Input B={B} label="Website URL" value={draft.contactsSection.featured.websiteUrl} onChange={v => upDeep("contactsSection.featured.websiteUrl", v)} />
+              <Section title="Other Contact Cards" />
+              {draft.contactsSection.cards.map((card, i) => (
+                <div key={card.id} style={{ background: B.cream, padding: 14, marginBottom: 14, borderRadius: 2 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: B.dark }}>Card {i + 1}</div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button disabled={i === 0} onClick={() => listMove("contactsSection.cards", i, -1)} style={{ background: "none", border: "none", color: i === 0 ? "#ccc" : B.dark, cursor: i === 0 ? "default" : "pointer" }}><Icon.up /></button>
+                      <button disabled={i === draft.contactsSection.cards.length - 1} onClick={() => listMove("contactsSection.cards", i, 1)} style={{ background: "none", border: "none", color: i === draft.contactsSection.cards.length - 1 ? "#ccc" : B.dark, cursor: i === draft.contactsSection.cards.length - 1 ? "default" : "pointer" }}><Icon.down /></button>
+                      <button onClick={() => listRemove("contactsSection.cards", i)} style={{ background: "none", border: "none", color: "#c0392b", cursor: "pointer" }}><Icon.trash /></button>
+                    </div>
+                  </div>
+                  <Input B={B} label="Tag" value={card.tag} onChange={v => listSet("contactsSection.cards", i, "tag", v)} />
+                  <Input B={B} label="Name" value={card.name} onChange={v => listSet("contactsSection.cards", i, "name", v)} />
+                  <Input B={B} label="Role" value={card.role} onChange={v => listSet("contactsSection.cards", i, "role", v)} />
+                  <div style={{ fontSize: 11, fontWeight: 600, color: "#888", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.08em" }}>Contact items</div>
+                  {(card.items || []).map((row, j) => (
+                    <div key={j} style={{ display: "grid", gridTemplateColumns: "auto 1fr 1fr auto", gap: 6, marginBottom: 6, alignItems: "center" }}>
+                      <select value={row.type} onChange={e => {
+                        const items = [...card.items]; items[j] = { ...items[j], type: e.target.value }; listSet("contactsSection.cards", i, "items", items);
+                      }} style={{ padding: "6px 4px", border: `1.5px solid ${B.silver}`, fontSize: 12, background: "#fff", fontFamily: B.bfont, borderRadius: 2 }}>
+                        <option value="phone">Phone</option>
+                        <option value="mail">Email</option>
+                        <option value="globe">Website</option>
+                      </select>
+                      <input value={row.text} onChange={e => {
+                        const items = [...card.items]; items[j] = { ...items[j], text: e.target.value }; listSet("contactsSection.cards", i, "items", items);
+                      }} placeholder="Display text" style={{ padding: "6px 8px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                      <input value={row.href} onChange={e => {
+                        const items = [...card.items]; items[j] = { ...items[j], href: e.target.value }; listSet("contactsSection.cards", i, "items", items);
+                      }} placeholder="Link (tel:/mailto:/https:)" style={{ padding: "6px 8px", border: `1.5px solid ${B.silver}`, fontSize: 12, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                      <button onClick={() => {
+                        const items = card.items.filter((_, k) => k !== j); listSet("contactsSection.cards", i, "items", items);
+                      }} style={{ background: "none", border: "none", color: "#c0392b", cursor: "pointer" }}><Icon.trash /></button>
+                    </div>
+                  ))}
+                  <button onClick={() => listSet("contactsSection.cards", i, "items", [...(card.items||[]), { type: "phone", text: "", href: "" }])}
+                    style={{ background: "none", border: `1px dashed ${B.silver}`, color: B.dark, padding: "5px 12px", fontSize: 11, fontFamily: B.bfont, cursor: "pointer", marginTop: 4 }}>+ Add item</button>
+                  <Input B={B} label="Note (italic, below items)" value={card.note} onChange={v => listSet("contactsSection.cards", i, "note", v)} />
+                </div>
+              ))}
+              <Btn B={B} variant="outline" onClick={() => listAdd("contactsSection.cards", { id: "c" + Date.now(), tag: "New", name: "Contact", role: "", items: [], note: "" })}><Icon.plus /> Add card</Btn>
+            </div>
+          )}
+
+          {/* CHECKLIST */}
+          {tab === "checklist" && (
+            <div>
+              <Toggle on={draft.checklistSection.show} onChange={v => upDeep("checklistSection.show", v)} label="Show Checklist section" />
+              <Input B={B} label="Section Step Label" value={draft.checklistSection.step} onChange={v => upDeep("checklistSection.step", v)} />
+              <Input B={B} label="Section Title" value={draft.checklistSection.title} onChange={v => upDeep("checklistSection.title", v)} />
+              <Input B={B} label="Tracker Header" value={draft.checklistSection.trackerLabel} onChange={v => upDeep("checklistSection.trackerLabel", v)} />
+              <Section title="Extra Checklist Items" />
+              {draft.checklistSection.extras.map((it, i) => (
+                <div key={it.id} style={{ display: "flex", gap: 6, marginBottom: 8 }}>
+                  <input value={it.label} onChange={e => listSet("checklistSection.extras", i, "label", e.target.value)}
+                    style={{ flex: 1, padding: "8px 10px", border: `1.5px solid ${B.silver}`, fontSize: 13, fontFamily: B.bfont, background: "#fff", borderRadius: 2 }} />
+                  <button onClick={() => listRemove("checklistSection.extras", i)} style={{ background: "none", border: `1.5px solid ${B.silver}`, color: "#c0392b", cursor: "pointer", padding: "0 10px" }}><Icon.trash /></button>
+                </div>
+              ))}
+              <Btn B={B} variant="outline" small onClick={() => listAdd("checklistSection.extras", { id: "x" + Date.now(), label: "New checklist item" })}><Icon.plus /> Add item</Btn>
+              <Section title="Independent Training Process" />
+              <Input B={B} label="Right-side Panel Title" value={draft.checklistSection.processTitle} onChange={v => upDeep("checklistSection.processTitle", v)} />
+              {draft.checklistSection.process.map((row, i) => (
+                <div key={i} style={{ background: B.cream, padding: 12, marginBottom: 10, borderRadius: 2 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: B.gold }}>Process {row.n}</div>
+                    <button onClick={() => listRemove("checklistSection.process", i)} style={{ background: "none", border: "none", color: "#c0392b", cursor: "pointer" }}><Icon.trash /></button>
+                  </div>
+                  <Input B={B} label="Title" value={row.title} onChange={v => listSet("checklistSection.process", i, "title", v)} />
+                  <Input B={B} label="Description" value={row.desc} onChange={v => listSet("checklistSection.process", i, "desc", v)} rows={2} />
+                </div>
+              ))}
+              <Btn B={B} variant="outline" small onClick={() => listAdd("checklistSection.process", { n: draft.checklistSection.process.length + 1, title: "New", desc: "" })}><Icon.plus /> Add process step</Btn>
+            </div>
+          )}
+
+          {/* FEEDBACK */}
+          {tab === "feedback" && (
+            <div>
+              <Toggle on={draft.feedbackSection.show} onChange={v => upDeep("feedbackSection.show", v)} label="Show Feedback section" />
+              <Input B={B} label="Section Step Label" value={draft.feedbackSection.step} onChange={v => upDeep("feedbackSection.step", v)} />
+              <Input B={B} label="Section Title" value={draft.feedbackSection.title} onChange={v => upDeep("feedbackSection.title", v)} />
+              <Input B={B} label="Intro Text" value={draft.feedbackSection.intro} onChange={v => upDeep("feedbackSection.intro", v)} rows={3} />
+              <Input B={B} label="Confirmation Message (after submit)" value={draft.feedbackSection.confirm} onChange={v => upDeep("feedbackSection.confirm", v)} rows={2} />
+            </div>
+          )}
+
+          {/* FOOTER */}
+          {tab === "footer" && (
+            <div>
+              <Note>The dark footer at the bottom of every page.</Note>
+              <Input B={B} label="Footer Text" value={draft.footer.text} onChange={v => upDeep("footer.text", v)} rows={2} />
+              <Input B={B} label="Website Display Text" value={draft.footer.websiteText} onChange={v => upDeep("footer.websiteText", v)} />
+              <Input B={B} label="Website URL" value={draft.footer.websiteUrl} onChange={v => upDeep("footer.websiteUrl", v)} />
+              <Input B={B} label="Contact Name" value={draft.footer.contactName} onChange={v => upDeep("footer.contactName", v)} />
+              <Input B={B} label="Contact Phone" value={draft.footer.contactPhone} onChange={v => upDeep("footer.contactPhone", v)} />
+            </div>
+          )}
+
+          {/* SECURITY */}
+          {tab === "security" && (
+            <div>
+              <Section title="Change Staff Access Code" />
+              <Note>This updates the code for all 11 Nuway stores plus Nuway Operations. Share securely.</Note>
+              <StaffCodeChanger B={B} current={draft.staffCode} onSave={code => { upDeep("staffCode", code); onSave({ ...draft, staffCode: code }); showToast("Staff code updated!"); }} />
+              <Section title="How to Share the Portal" />
+              <div style={{ fontSize: 12, color: "#555", lineHeight: 2, background: B.cream, padding: 14, borderRadius: 2 }}>
+                <div><strong>Quickest — Netlify Drop (30 seconds):</strong></div>
+                <div>1. Go to <a href="https://app.netlify.com/drop" target="_blank" style={{ color: B.dark }}>app.netlify.com/drop</a></div>
+                <div>2. Drag this HTML file (and the pdfs/ folder) onto the page</div>
+                <div>3. Get an instant link to send to all stores</div>
+              </div>
+              <Section title="Login Credentials" />
+              <div style={{ fontSize: 12, color: "#555", background: B.cream, padding: 12, borderRadius: 2, lineHeight: 2 }}>
+                <div>🔑 <strong>Admin code (you only):</strong> KrystalAdmin2026</div>
+                <div>🔒 <strong>Current staff code:</strong> <strong style={{ color: B.dark }}>{draft.staffCode}</strong></div>
+                <div style={{ fontSize: 11, color: "#999", marginTop: 6 }}>Staff see the portal only — no Admin Editor button.</div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{ padding: 14, borderTop: `1px solid ${B.silver}`, flexShrink: 0, background: "#fff" }}>
+          <Btn B={B} onClick={saveAll} style={{ width: "100%", justifyContent: "center" }}>Save All Changes</Btn>
+        </div>
+      </div>
+
+      {toast && (
+        <div style={{ position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)", background: B.dark, color: B.cream, padding: "11px 22px", fontSize: 13, boxShadow: "0 6px 24px rgba(0,0,0,0.3)", zIndex: 9999, borderLeft: `3px solid ${B.gold}`, whiteSpace: "nowrap" }}>
+          ✓ {toast}
+        </div>
+      )}
+    </>
+  );
+}
+
+function App() {
+  const [session, setSession] = useState(null);
+  const [content, setContent] = useState(null);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [logins, setLogins] = useState([]);
+  const [videoStats, setVideoStats] = useState({});
+  const [completions, setCompletions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  function deepMerge(target, source) {
+    const out = Array.isArray(target) ? [...target] : { ...target };
+    for (const key in source) {
+      if (source[key] && typeof source[key] === "object" && !Array.isArray(source[key])) {
+        out[key] = deepMerge(target[key] || {}, source[key]);
+      } else {
+        out[key] = source[key];
+      }
+    }
+    return out;
+  }
+
+  useEffect(() => {
+    async function init() {
+      const saved = await load("content");
+      const merged = saved ? deepMerge(DEFAULT_CONTENT, saved) : DEFAULT_CONTENT;
+      setContent(merged);
+      applyTheme(merged.theme);
+      setLogins((await load("logins")) || []);
+      setVideoStats((await load("videoStats")) || {});
+      setCompletions((await load("completions")) || []);
+      setLoading(false);
+    }
+    init();
+  }, []);
+
+  async function handleSave(newContent) {
+    const result = await save("content", newContent);
+    if (result && result.ok) {
+      setContent(newContent);
+      applyTheme(newContent.theme);
+    }
+    return result;
+  }
+  async function handleVideoWatch(videoId) {
+    const updated = { ...videoStats, [videoId]: (videoStats[videoId] || 0) + 1 };
+    setVideoStats(updated);
+    await save("videoStats", updated);
+  }
+  async function handleCompletion(record) {
+    const updated = [...completions, { ...record, ts: Date.now() }];
+    setCompletions(updated);
+    await save("completions", updated);
+  }
+  async function handleLogin(sess) {
+    setSession(sess);
+    setLogins((await load("logins")) || []);
+    setVideoStats((await load("videoStats")) || {});
+    setCompletions((await load("completions")) || []);
+  }
+
+  const B = useMemo(() => content ? makeB(content.theme) : makeB(DEFAULT_CONTENT.theme), [content]);
+
+  if (loading || !content) return (
+    <div style={{ minHeight: "100vh", background: B.dark, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ textAlign: "center" }}>
+        <div style={{ width: 40, height: 40, border: `3px solid ${B.silver}40`, borderTop: `3px solid ${B.silver}`, borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 16px" }} />
+        <div style={{ color: B.silver, fontSize: 13, letterSpacing: "0.1em" }}>Loading portal…</div>
+      </div>
+    </div>
+  );
+
+  if (!session) return <LoginScreen onLogin={handleLogin} content={content} B={B} />;
+
+  return (
+    <>
+      <Portal session={session} content={content} onLogout={() => setSession(null)} onAdminOpen={() => setAdminOpen(true)} onVideoWatch={handleVideoWatch} videoStats={videoStats} onCompletion={handleCompletion} B={B} />
+      {adminOpen && session.isAdmin && (
+        <AdminPanel content={content} onSave={handleSave} onClose={() => setAdminOpen(false)} logins={logins} videoStats={videoStats} completions={completions} B={B} />
+      )}
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+
+window.addEventListener("error", function(e){
+  let div = document.getElementById("__err");
+  if (!div) {
+    div = document.createElement("div");
+    div.id = "__err";
+    div.style.cssText = "position:fixed;bottom:0;left:0;right:0;background:#a33;color:#fff;padding:14px 20px;font-family:monospace;font-size:12px;z-index:99999;max-height:30vh;overflow:auto;border-top:3px solid #fff";
+    document.body.appendChild(div);
+  }
+  div.innerHTML += "<div>⚠ "+ (e.message || e.error) +" — at "+ (e.filename||"?") +":"+ (e.lineno||"?") +"</div>";
+});
+</script>
+</body>
+</html>
+ 
