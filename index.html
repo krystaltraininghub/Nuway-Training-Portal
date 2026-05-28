@@ -4,8 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Stone &amp; Outdoor — Nuway Training Portal</title>
-<!-- BUILD: 2026-05-28-c-auto-reset-on-version-change -->
-<meta name="build" content="2026-05-28-c-auto-reset-on-version-change" />
+<!-- BUILD: 2026-05-28-i-jotform-urls-swapped -->
+<meta name="build" content="2026-05-28-i-jotform-urls-swapped" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;600;700&family=Raleway:wght@300;400;600;700&family=Lato:wght@300;400;700&family=Inter:wght@300;400;600;700&family=Jost:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600;700&display=swap" />
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -40,7 +40,7 @@
 const { useState, useEffect, useMemo } = React;
 
 // Bump this whenever you want all existing browsers to refresh to new defaults.
-const BUILD_VERSION = "2026-05-28-c";
+const BUILD_VERSION = "2026-05-28-i";
 
 // On load, if the saved build version doesn't match the current code, clear stale saved content
 // so users see the latest defaults instead of merging stale data over new code.
@@ -130,8 +130,20 @@ const DEFAULT_CONTENT = {
     { id:"v5", title:"How Stone Panels Are Made", tag:"Manufacturing · Staff Reference", desc:"How stone panels are made — guidance only for staff information.", url:"", thumbnail:"" },
   ],
 
-  // ── COUNTER FOLDER (was Downloads) ──
+  // ── DOWNLOADS & RESOURCES (general) ──
   downloadsSection: {
+    show: true,
+    step: "Step 2",
+    title: "Downloads & Resources",
+  },
+  downloads: [
+    { id:"d1", title:"Training Guide", desc:"Complete staff training guide. Save for independent training and new staff inductions.", url:"", thumbnail:"" },
+    { id:"d2", title:"Counter Folder Guide", desc:"Reference for the point-of-sale counter folder — contacts, ordering, and complaint procedure.", url:"", thumbnail:"" },
+    { id:"d3", title:"Ordering Reference", desc:"Quick-reference for placing orders — product codes, minimum quantities, and correct process.", url:"", thumbnail:"" },
+  ],
+
+  // ── COUNTER FOLDER (product info sheets, separate from Downloads) ──
+  counterFolderSection: {
     show: true,
     step: "Counter Folder",
     title: "Product Information Sheets",
@@ -139,7 +151,7 @@ const DEFAULT_CONTENT = {
     bulkPdfUrl: "pdfs/COUNTER_FOLDER.pdf",
     bulkPdfLabel: "Full Counter Folder PDF",
   },
-  downloads: [],
+  counterFolderProducts: [],
 
   // ── PROCEDURES ──
   proceduresSection: {
@@ -175,61 +187,40 @@ const DEFAULT_CONTENT = {
     show: true,
     step: "Contact Directory",
     title: "Who to Contact at Stone & Outdoor",
-    intro: "For Nuway Staff Use Only. Match your enquiry to the right person below.",
     pdfUrl: "pdfs/CONTACTS_LIST.pdf",
     pdfLabel: "Full Contacts List PDF",
     featured: {
-      tag: "Warehouse Manager — PRIMARY for stock, orders & deliveries",
-      name: "John Latoa",
-      role: "Yard orders · Customer orders · Pick-ups · Stock photos & quantity checks · Shipment ETAs · Invoices & POs · Display stock",
-      mobile: "0428 802 647",
-      office: "",
-      email: "sales@stoneoutdoor.com.au",
-      website: "Renix & Nikola (Nik) may answer this phone",
-      websiteUrl: "",
+      tag: "Sales & Business Development Manager",
+      name: "Krystal Adamson",
+      role: "Your Stone & Outdoor Rep — Training & product questions",
+      mobile: "0493 800 055",
+      office: "07 3808 4503",
+      email: "krystal@stoneoutdoor.com.au",
+      website: "stoneoutdoor.com.au",
+      websiteUrl: "https://www.stoneoutdoor.com.au",
     },
     cards: [
       {
         id: "c1",
-        tag: "Sales & Business Development Manager",
-        name: "Krystal Adamson",
-        role: "Customer complaints & order issues · Installation guides & technical docs · Slip ratings & product suitability · Staff training · Product info & specs · Special pricing · Nuway pricing queries",
+        tag: "Sales & Orders",
+        name: "Sales Enquiries",
+        role: "General product and order enquiries",
         items: [
-          { type: "phone", text: "0493 800 055 (mobile — commercial/trade only)", href: "tel:0493800055" },
-          { type: "phone", text: "07 3808 4503 (landline — pick-up coordination)", href: "tel:0738084503" },
-          { type: "mail",  text: "krystal@stoneoutdoor.com.au", href: "mailto:krystal@stoneoutdoor.com.au" },
-        ],
-        note: "Landline diverts to Krystal, then to John if Krystal is unavailable. Mobile only for commercial customers and trade clients.",
-      },
-      {
-        id: "c2",
-        tag: "CEO — Backup Only",
-        name: "Chris Haddon",
-        role: "Backup contact only — when Krystal is on leave AND John has advised to contact Chris.",
-        items: [
-          { type: "phone", text: "0403 359 619", href: "tel:0403359619" },
-          { type: "mail",  text: "chris@stoneoutdoor.com.au", href: "mailto:chris@stoneoutdoor.com.au" },
-        ],
-        note: "⚠ Chris's details are NEVER to be provided to customers. Nuway internal use only.",
-      },
-      {
-        id: "c3",
-        tag: "Warehouse Staff",
-        name: "Renix Price · Nikola (Nik) Mafi",
-        role: "Day-to-day operational support under direction of the Warehouse Manager. May answer the sales line while training — please be patient.",
-        items: [
-          { type: "phone", text: "0428 802 647 (sales line)", href: "tel:0428802647" },
+          { type: "phone", text: "07 3808 4503", href: "tel:0738084503" },
           { type: "mail",  text: "sales@stoneoutdoor.com.au", href: "mailto:sales@stoneoutdoor.com.au" },
         ],
         note: "",
       },
       {
-        id: "c4",
-        tag: "Quick Reference — Escalation Summary",
-        name: "Who to Contact",
-        role: "Stock / warehouse / orders / deliveries → John · Complaints / technical / pricing / training → Krystal · Krystal on leave & John advises → Chris · Customer pick-ups → Stone & Outdoor landline · Commercial & trade → Krystal mobile only",
-        items: [],
-        note: "Chris's details: internal use only — never shared.",
+        id: "c2",
+        tag: "Customer Complaints",
+        name: "Customer Direct",
+        role: "For customers to contact Stone & Outdoor directly",
+        items: [
+          { type: "phone", text: "07 3808 4503", href: "tel:0738084503" },
+          { type: "globe", text: "stoneoutdoor.com.au/contact-us", href: "https://www.stoneoutdoor.com.au/contact-us/" },
+        ],
+        note: "Direct customers here — do not contact on their behalf",
       },
     ],
   },
@@ -261,6 +252,12 @@ const DEFAULT_CONTENT = {
     title: "Feedback & Suggestions",
     intro: "Have suggestions for the counter folder, or ideas for future videos — quarry tours, how products are made, how-to laying guides? Let Krystal know below.",
     confirm: "Thank you! Krystal will review your feedback and be in touch if needed.",
+    jotformUrl: "https://form.jotform.com/261476914535060",
+  },
+
+  // ── MARK TRAINING COMPLETE ──
+  completion: {
+    jotformUrl: "https://form.jotform.com/261477537789073",
   },
 
   // ── FOOTER ──
@@ -510,49 +507,31 @@ function VideoModal({ video, onClose, onWatch, B }) {
 // FEEDBACK FORM
 // ════════════════════════════════════════════════════════════════════
 function FeedbackForm({ content, B }) {
-  const [name, setName] = useState("");
-  const [store, setStore] = useState("");
-  const [type, setType] = useState("");
-  const [msg, setMsg] = useState("");
-  const [sent, setSent] = useState(false);
-
-  function submit() {
-    if (!msg.trim()) { alert("Please enter your feedback."); return; }
-    const recipient = (content.feedbackSection && content.feedbackSection.recipient) || (content.footer && content.footer.contactEmail) || "krystal@stoneoutdoor.com.au";
-    const subject = encodeURIComponent("Nuway Training Portal — Feedback from " + (name || "Anonymous"));
-    const body = encodeURIComponent(
-      "Name: " + (name || "(not provided)") + "\n" +
-      "Store: " + (store || "(not provided)") + "\n" +
-      "Feedback type: " + (type || "(not provided)") + "\n\n" +
-      "Feedback:\n" + msg + "\n\n" +
-      "— Sent from the Nuway Training Portal"
-    );
-    window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
-    setSent(true);
-    setName(""); setStore(""); setType(""); setMsg("");
-  }
-
-  if (sent) return (
-    <div style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: 32 }}>
-      <div style={{ padding: "12px 14px", background: "#f0f7ee", borderLeft: "3px solid #5a9e4a", color: "#3a6630", fontSize: 14 }}>
-        ✓ {content.feedbackSection.confirm}
+  const jotformUrl = content.feedbackSection && content.feedbackSection.jotformUrl;
+  if (jotformUrl) {
+    return (
+      <div style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: 0, overflow: "hidden" }}>
+        {content.feedbackSection.intro && (
+          <div style={{ padding: "20px 28px 0", fontSize: 14, color: "#888", lineHeight: 1.7 }}>
+            {content.feedbackSection.intro}
+          </div>
+        )}
+        <iframe
+          src={jotformUrl}
+          title="Feedback Form"
+          style={{ width: "100%", minHeight: 720, border: "none", display: "block" }}
+          allow="geolocation; microphone; camera"
+          allowTransparency="true"
+        />
       </div>
-      <Btn B={B} onClick={() => setSent(false)} variant="ghost" small style={{ marginTop: 14 }}>Submit another</Btn>
-    </div>
-  );
-
+    );
+  }
+  // Fallback (no JotForm URL configured): mailto-based form
   return (
     <div style={{ background: "#fff", border: `1px solid ${B.silver}`, padding: 32 }}>
-      <div style={{ fontSize: 14, color: "#888", lineHeight: 1.7, marginBottom: 22, maxWidth: 560 }}>
-        {content.feedbackSection.intro}
+      <div style={{ fontSize: 14, color: "#888", lineHeight: 1.7, marginBottom: 22 }}>
+        {(content.feedbackSection && content.feedbackSection.intro) || "Set a JotForm URL in admin to enable feedback submissions."}
       </div>
-      <div className="twocol" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
-        <Input B={B} label="Your Name" value={name} onChange={setName} placeholder="Name" />
-        <Input B={B} label="Store Name" value={store} onChange={setStore} placeholder="Nuway store" />
-      </div>
-      <Input B={B} label="Feedback Type" value={type} onChange={setType} placeholder="e.g. Video idea, counter folder suggestion..." />
-      <Input B={B} label="Your Feedback" value={msg} onChange={setMsg} placeholder="Tell us what you'd like to see added or changed..." rows={4} />
-      <Btn B={B} onClick={submit}>Submit Feedback</Btn>
     </div>
   );
 }
@@ -712,28 +691,65 @@ function Portal({ session, content, onLogout, onAdminOpen, onVideoWatch, videoSt
           </div>
         )}
 
-        {/* COUNTER FOLDER */}
+        {/* DOWNLOADS & RESOURCES */}
         {content.downloadsSection.show && (
           <div id="section-downloads" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
             <SectionHeader step={content.downloadsSection.step} title={content.downloadsSection.title} />
-            {content.downloadsSection.warning && (
-              <div style={{ background: "#fff5e8", border: `1px solid #f0c890`, borderLeft: `4px solid ${B.gold}`, padding: "14px 18px", marginBottom: 18, display: "flex", alignItems: "flex-start", gap: 12 }}>
-                <div style={{ color: B.gold, flexShrink: 0, marginTop: 2 }}><Icon.alert /></div>
-                <div style={{ fontSize: 13, color: B.dark, lineHeight: 1.6, fontWeight: 500 }}>{content.downloadsSection.warning}</div>
-              </div>
-            )}
-            {content.downloadsSection.bulkPdfUrl && (
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22, alignItems: "center", padding: "16px 20px", background: "#fff", border: `1px solid ${B.silver}`, borderLeft: `4px solid ${B.dark}` }}>
-                <span style={{ fontSize: 13, color: B.dark, fontWeight: 600, marginRight: 6 }}>{content.downloadsSection.bulkPdfLabel || "Full Counter Folder PDF"}:</span>
-                <button onClick={() => viewUrl(content.downloadsSection.bulkPdfUrl)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", background: B.dark, color: "#fff", fontFamily: B.bfont }}>View</button>
-                {(content.downloadsSection.bulkPdfUrl.toLowerCase().endsWith(".pdf") || content.downloadsSection.bulkPdfUrl.startsWith("data:application/pdf")) && (
-                  <a href={content.downloadsSection.bulkPdfUrl} download={content.downloadsSection.bulkPdfFilename || "Counter Folder.pdf"} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` }}>Print / Save</a>
-                )}
-              </div>
-            )}
             {content.downloads.length > 0 && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 1, background: B.silver, border: `1px solid ${B.silver}` }}>
               {content.downloads.map(d => (
+                <div key={d.id} className="card-hover" style={{ background: "#fff", padding: 22, display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+                  {d.thumbnail && (
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, backgroundImage: `url("${d.thumbnail}")`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.7, pointerEvents: "none" }} />
+                  )}
+                  {d.thumbnail && (
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.88) 100%)", pointerEvents: "none" }} />
+                  )}
+                  <div style={{ position: "relative", zIndex: 1, width: 38, height: 38, background: B.dark, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, color: B.cream }}>
+                    <Icon.download />
+                  </div>
+                  <div style={{ position: "relative", zIndex: 1, fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", color: B.dark, marginBottom: 6 }}>{d.title}</div>
+                  <div style={{ position: "relative", zIndex: 1, fontSize: 12, color: "#666", lineHeight: 1.5, marginBottom: 16, flex: 1 }}>{d.desc}</div>
+                  {d.url ? (() => {
+                    const isPdf = d.url.toLowerCase().endsWith(".pdf") || d.url.startsWith("data:application/pdf");
+                    return (
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+                        <button onClick={() => viewUrl(d.url)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", background: B.dark, color: "#fff", fontFamily: B.bfont }}>View</button>
+                        {isPdf && (
+                          <a href={d.url} download={d.filename || d.title} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` }}>Print / Save</a>
+                        )}
+                      </div>
+                    );
+                  })() : <span style={{ fontSize: 11, color: "#bbb" }}>Link coming soon</span>}
+                </div>
+              ))}
+            </div>
+            )}
+          </div>
+        )}
+
+        {/* COUNTER FOLDER — PRODUCT INFORMATION SHEETS */}
+        {content.counterFolderSection && content.counterFolderSection.show && (
+          <div id="section-counter-folder" style={{ marginBottom: 56, scrollMarginTop: 80 }}>
+            <SectionHeader step={content.counterFolderSection.step} title={content.counterFolderSection.title} />
+            {content.counterFolderSection.warning && (
+              <div style={{ background: "#fff5e8", border: `1px solid #f0c890`, borderLeft: `4px solid ${B.gold}`, padding: "14px 18px", marginBottom: 18, display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <div style={{ color: B.gold, flexShrink: 0, marginTop: 2 }}><Icon.alert /></div>
+                <div style={{ fontSize: 13, color: B.dark, lineHeight: 1.6, fontWeight: 500 }}>{content.counterFolderSection.warning}</div>
+              </div>
+            )}
+            {content.counterFolderSection.bulkPdfUrl && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22, alignItems: "center", padding: "16px 20px", background: "#fff", border: `1px solid ${B.silver}`, borderLeft: `4px solid ${B.dark}` }}>
+                <span style={{ fontSize: 13, color: B.dark, fontWeight: 600, marginRight: 6 }}>{content.counterFolderSection.bulkPdfLabel || "Full Counter Folder PDF"}:</span>
+                <button onClick={() => viewUrl(content.counterFolderSection.bulkPdfUrl)} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", border: "none", cursor: "pointer", background: B.dark, color: "#fff", fontFamily: B.bfont }}>View</button>
+                {(content.counterFolderSection.bulkPdfUrl.toLowerCase().endsWith(".pdf") || content.counterFolderSection.bulkPdfUrl.startsWith("data:application/pdf")) && (
+                  <a href={content.counterFolderSection.bulkPdfUrl} download={content.counterFolderSection.bulkPdfFilename || "Counter Folder.pdf"} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", background: "transparent", color: B.dark, border: `1.5px solid ${B.dark}` }}>Print / Save</a>
+                )}
+              </div>
+            )}
+            {(content.counterFolderProducts || []).length > 0 && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 1, background: B.silver, border: `1px solid ${B.silver}` }}>
+              {(content.counterFolderProducts || []).map(d => (
                 <div key={d.id} className="card-hover" style={{ background: "#fff", padding: 22, display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
                   {d.thumbnail && (
                     <div aria-hidden="true" style={{ position: "absolute", inset: 0, backgroundImage: `url("${d.thumbnail}")`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.7, pointerEvents: "none" }} />
@@ -923,44 +939,30 @@ function Portal({ session, content, onLogout, onAdminOpen, onVideoWatch, videoSt
           </div>
         </div>
 
-        {/* COMPLETE MODAL */}
-        {completeOpen && (
-          <div onClick={e => e.target === e.currentTarget && setCompleteOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 1100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-            <div className="fade-in" style={{ background: "#fff", width: 460, maxWidth: "100%", padding: 32, position: "relative" }}>
-              <button onClick={() => setCompleteOpen(false)} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", cursor: "pointer", color: "#999" }}><Icon.close /></button>
-              {confirmDone ? (
-                <>
-                  <div style={{ fontFamily: B.hfont, fontSize: 22, fontWeight: 600, color: B.dark, marginBottom: 10 }}>✓ Training logged!</div>
-                  <div style={{ fontSize: 14, color: "#666", lineHeight: 1.6, marginBottom: 22 }}>
-                    Thanks <strong>{staffName}</strong> — your completion has been recorded for <strong>{session.store}</strong>. {content.footer.contactName} will see you as up-to-date.
+        {/* COMPLETE MODAL — JotForm embed */}
+        {completeOpen && (() => {
+          const jotUrl = content.completion && content.completion.jotformUrl;
+          return (
+            <div onClick={e => e.target === e.currentTarget && setCompleteOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 1100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+              <div className="fade-in" style={{ background: "#fff", width: jotUrl ? 720 : 460, maxWidth: "100%", height: jotUrl ? "90vh" : "auto", maxHeight: "92vh", padding: jotUrl ? 0 : 32, position: "relative", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                <button onClick={() => setCompleteOpen(false)} style={{ position: "absolute", top: 10, right: 12, background: B.dark, color: "#fff", border: "none", cursor: "pointer", width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}><Icon.close /></button>
+                {jotUrl ? (
+                  <iframe
+                    src={jotUrl}
+                    title="Mark Training Complete"
+                    style={{ width: "100%", flex: 1, border: "none", display: "block" }}
+                    allow="geolocation; microphone; camera"
+                    allowTransparency="true"
+                  />
+                ) : (
+                  <div style={{ padding: 32 }}>
+                    <div style={{ fontSize: 14, color: "#666" }}>Set a JotForm URL in admin (Feedback tab) to enable completion submissions.</div>
                   </div>
-                  <Btn B={B} onClick={() => setCompleteOpen(false)}>Close</Btn>
-                </>
-              ) : (
-                <>
-                  <div style={{ fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: B.gold, marginBottom: 6 }}>Mark Training Complete</div>
-                  <div style={{ fontFamily: B.hfont, fontSize: 20, fontWeight: 600, color: B.dark, marginBottom: 8 }}>Confirm your details</div>
-                  <div style={{ fontSize: 13, color: "#666", marginBottom: 20, lineHeight: 1.6 }}>
-                    Logging completion for <strong style={{ color: B.dark }}>{session.store}</strong> — {doneCount} of {totalItems} items ticked.
-                  </div>
-                  <Input B={B} label="Your Full Name" value={staffName} onChange={setStaffName} placeholder="e.g. Sam Taylor" />
-                  <div style={{ marginBottom: 14 }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#888", marginBottom: 5 }}>Job Role</div>
-                    <select value={staffRole} onChange={e => setStaffRole(e.target.value)}
-                      style={{ width: "100%", padding: "10px 12px", border: `1.5px solid ${B.silver}`, fontSize: 13, color: B.dark, background: "#fff", fontFamily: B.bfont, outline: "none", borderRadius: 2 }}>
-                      <option value="">Select your role…</option>
-                      {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-                    </select>
-                  </div>
-                  <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-                    <Btn B={B} variant="ghost" small onClick={() => setCompleteOpen(false)}>Cancel</Btn>
-                    <Btn B={B} onClick={submitCompletion} style={{ flex: 1, justifyContent: "center" }}>Submit Completion</Btn>
-                  </div>
-                </>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* FEEDBACK */}
         {content.feedbackSection.show && (
@@ -1675,6 +1677,37 @@ function AdminPanel({ content, onSave, onClose, logins, videoStats, completions 
                 <div>🔒 <strong>Current staff code:</strong> <strong style={{ color: B.dark }}>{draft.staffCode}</strong></div>
                 <div style={{ fontSize: 11, color: "#999", marginTop: 6 }}>Staff see the portal only — no Admin Editor button.</div>
               </div>
+              <Section title="Reset Tracking Data (logins · video views · completions)" />
+              <div style={{ fontSize: 12, color: "#555", background: B.cream, padding: 12, borderRadius: 2, lineHeight: 1.6, marginBottom: 10 }}>
+                Clears all store login records, video watch counts, and training completion submissions — but KEEPS all your content edits (videos, downloads, contacts, theme). Use yearly or whenever you want to start fresh tracking.
+              </div>
+              <Btn B={B} variant="outline" onClick={() => {
+                if (confirm("Clear all login records, video watch counts, and completion submissions?\n\nYour content edits will NOT be touched.")) {
+                  localStorage.removeItem("logins");
+                  localStorage.removeItem("videoStats");
+                  localStorage.removeItem("completions");
+                  showToast("Tracking data cleared. Reload to see fresh stats.");
+                  setTimeout(() => location.reload(), 1200);
+                }
+              }}>Reset Tracking Data</Btn>
+              <Section title="Export / Import Content" />
+              <div style={{ fontSize: 12, color: "#555", background: B.cream, padding: 12, borderRadius: 2, lineHeight: 1.6, marginBottom: 10 }}>
+                Export your saved content as a JSON file to back up or move to another URL. Import a JSON file to restore your edits.
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <Btn B={B} variant="outline" onClick={() => {
+                  const payload = { content: draft, build: BUILD_VERSION, exportedAt: new Date().toISOString() };
+                  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a"); a.href = url; a.download = "nuway-portal-content.json"; a.click();
+                  setTimeout(() => URL.revokeObjectURL(url), 1000);
+                }}>Export Content (.json)</Btn>
+                <label style={{ display: "inline-flex", alignItems: "center", padding: "10px 22px", border: `1.5px solid ${B.dark}`, color: B.dark, fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer", background: "transparent" }}>
+                  Import Content
+                  <input type="file" accept="application/json,.json" style={{ display: "none" }}
+                    onChange={e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { try { const data = JSON.parse(r.result); const payload = data.content || data; setDraft(payload); onSave(payload); showToast("Content imported! Click Save All Changes."); } catch (err) { alert("Invalid JSON file: " + err.message); } }; r.readAsText(f); e.target.value = ""; }} />
+                </label>
+              </div>
             </div>
           )}
         </div>
@@ -1692,6 +1725,7 @@ function AdminPanel({ content, onSave, onClose, logins, videoStats, completions 
     </>
   );
 }
+
 
 function App() {
   const [session, setSession] = useState(null);
@@ -1716,8 +1750,23 @@ function App() {
 
   useEffect(() => {
     async function init() {
+      // Try to load a "content.json" file from the same folder as index.html.
+      // If present, treat it as the SHARED defaults for all stores (overrides built-in defaults).
+      // Personal admin edits in localStorage still take priority on top.
+      let bakedDefaults = DEFAULT_CONTENT;
+      try {
+        const resp = await fetch("content.json", { cache: "no-store" });
+        if (resp.ok) {
+          const json = await resp.json();
+          const baked = (json && json.content) ? json.content : json;
+          if (baked && typeof baked === "object") {
+            bakedDefaults = deepMerge(DEFAULT_CONTENT, baked);
+          }
+        }
+      } catch (e) { /* no shared content.json present — that's fine, use built-in defaults */ }
+
       const saved = await load("content");
-      const merged = saved ? deepMerge(DEFAULT_CONTENT, saved) : DEFAULT_CONTENT;
+      const merged = saved ? deepMerge(bakedDefaults, saved) : bakedDefaults;
       setContent(merged);
       applyTheme(merged.theme);
       setLogins((await load("logins")) || []);
@@ -1792,4 +1841,5 @@ window.addEventListener("error", function(e){
 </script>
 </body>
 </html>
- 
+>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
