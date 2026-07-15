@@ -1,0 +1,308 @@
+{
+  "content": {
+    "theme": {
+      "colorDark": "#393F4A",
+      "colorCream": "#F2F1EE",
+      "colorSilver": "#D0D1CC",
+      "colorGold": "#8B7355",
+      "colorWhite": "#FFFFFF",
+      "colorText": "#444444",
+      "headingFont": "'Poppins', sans-serif",
+      "bodyFont": "'Poppins', sans-serif",
+      "fontSize": 15
+    },
+    "logoUrl": "https://stoneoutdoor.com.au/wp-content/uploads/Stone-Outdoor-Stacked-Light.svg",
+    "logoHeight": 140,
+    "social": {
+      "facebook": "https://www.facebook.com/stoneandoutdoor",
+      "instagram": "https://www.instagram.com/stoneandoutdoor/",
+      "website": "https://www.stoneoutdoor.com.au"
+    },
+    "login": {
+      "badge": "Nuway Training Portal",
+      "welcomeTitle": "Welcome",
+      "welcomeText": "Sign in to access your Stone & Outdoor training resources, videos, and guides.",
+      "needAccessText": "Need access? Contact Krystal —",
+      "needAccessNumber": "0493 800 055"
+    },
+    "hero": {
+      "eyebrow": "Nuway Stores — Staff Training Hub",
+      "title": "Your complete Stone & Outdoor training resource",
+      "description": "Everything your team needs to confidently sell and support Stone & Outdoor products — videos, guides, contacts, and more.",
+      "tags": [
+        "Training Videos",
+        "Downloads and resources",
+        "Counter Folder",
+        "Procedures",
+        "New Complaint Procedure",
+        "Contacts",
+        "Staff Training Checklist",
+        "Feedback"
+      ]
+    },
+    "videosSection": {
+      "show": true,
+      "step": "Step 1",
+      "title": "Training Videos"
+    },
+    "videos": [
+      {
+        "id": "v1",
+        "title": "Stone & Outdoor x Nuway Intro",
+        "tag": "All Staff · Start Here",
+        "desc": "Welcome video — get insights into who we are and what products we sell together.",
+        "url": "https://canva.link/0zwatpesat1sxwf",
+        "thumbnail": "images/stone_outdoor_x_nuway_intro.png"
+      },
+      {
+        "id": "v1780014613088",
+        "title": "Display Walk through",
+        "tag": "All Staff",
+        "desc": "A quick walkthrough of our display layout, product positioning and setup, designed to assist stores with presentation and organisation while allowing customers to view products prior to purchase.",
+        "url": "Display Walkthrough Training.pdf",
+        "thumbnail": "images/display_walk_through.png"
+      },
+      {
+        "id": "v1780014748101",
+        "title": "Yard Stock Walk through",
+        "tag": "All Staff",
+        "desc": "A quick walkthrough of the Yard Stock system, including how to check stock, safely store products, maintain neat and organised yard presentation, and ensure displays remain clean, accessible and easy for customers to view.",
+        "url": "",
+        "thumbnail": ""
+      },
+      {
+        "id": "v1780014920203",
+        "title": "Product Look up Tool",
+        "tag": "All Staff",
+        "desc": "A quick walkthrough of the Product Look Up Tool, including how to search products, check available stock quantities, and confirm product details for customer orders.",
+        "url": "https://chrislookup.github.io/productfind/",
+        "thumbnail": "images/product_look_up_tool.png"
+      },
+      {
+        "id": "v2",
+        "title": "Enviornex Synergy Sealing",
+        "tag": "Sealing · Staff Reference",
+        "desc": "Sealing is recommended to be completed by a licensed tradesman — guidance only for staff information.",
+        "url": "https://www.bing.com/videos/riverview/relatedvideo?q=environex+sealing+natural+stone+video&cvid=c88d6f7d067a4979a7475510db3f2728&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQRRg8MggICBDpBxj8VdIBCDkyMjdqMGo0qAIAsAIA&adppc=EDGEESS&PC=EDGEESS&ru=%2fsearch%3fq%3denvironex%2bsealing%2bnatural%2bstone%2bvideo%26cvid%3dc88d6f7d067a4979a7475510db3f2728%26gs_lcrp%3dEgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQRRg8MggICBDpBxj8VdIBCDkyMjdqMGo0qAIAsAIA%26FORM%3dANAB01%26adppc%3dEDGEESS%26PC%3dEDGEESS&mmscn=vwrc&mid=7329F1ED564E9EA57F847329F1ED564E9EA57F84&FORM=WRVORC&ntb=1&msockid=9dd51bfd0aea11f1999e92253ddffe12",
+        "thumbnail": "images/enviornex_synergy_sealing.png"
+      },
+      {
+        "id": "v3",
+        "title": "Pool Coping Dip Sealing",
+        "tag": "Sealing · Staff Reference",
+        "desc": "Sealing is recommended to be completed by a licensed tradesman — guidance only for staff information.",
+        "url": "https://www.facebook.com/InStyle.Gardens/videos/555025508722808/",
+        "thumbnail": "images/pool_coping_dip_sealing.png"
+      },
+      {
+        "id": "v4",
+        "title": "Travertine Silver Quarry Process",
+        "tag": "Quarry · Staff Reference",
+        "desc": "How travertine is quarried — guidance only for staff information.",
+        "url": "https://www.instagram.com/reel/DGu3lJLopbY/?igsh=aXhnamdtb2NpM3Jn",
+        "thumbnail": "images/travertine_silver_quarry_process.png"
+      },
+      {
+        "id": "v5",
+        "title": "How Stone Panels Are Made",
+        "tag": "Manufacturing · Staff Reference",
+        "desc": "How stone panels are made — guidance only for staff information.",
+        "url": "https://www.instagram.com/reel/CPpgI9FJLJz/?igsh=MXkyZGZteTlhZGdsZw%3D%3D",
+        "thumbnail": "images/how_stone_panels_are_made.png"
+      }
+    ],
+    "downloadsSection": {
+      "show": true,
+      "step": "Step 2",
+      "title": "Downloads & Resources"
+    },
+    "downloads": [
+      {
+        "id": "d1",
+        "title": "Training Guide",
+        "desc": "Complete staff training guide. Save for independent training and new staff inductions.",
+        "url": "",
+        "thumbnail": ""
+      },
+      {
+        "id": "d2",
+        "title": "Product Look Up Tool",
+        "desc": "A quick walkthrough of the Product Look Up Tool, including how to search products, check available stock quantities, and confirm product details for customer orders.",
+        "url": "pdfs/STOCK_LOOKUP_TOOL.pdf",
+        "thumbnail": "images/product_look_up_tool.png"
+      },
+      {
+        "id": "d3",
+        "title": "Environex Cleaning and Sealing Selector",
+        "desc": "Quick reference guide showing recommended Environex sealers and cleaners for different natural stone, porcelain and masonry surfaces. Designed to assist with product selection, maintenance and general care recommendations.",
+        "url": "pdfs/ENVIRONEX_SEALING_CHART.pdf",
+        "thumbnail": "sealer.png"
+      }
+    ],
+    "counterFolderSection": {
+      "show": true,
+      "step": "Counter Folder",
+      "title": "Product Information Sheets",
+      "warning": "These are training resources only — DO NOT give to customers. For staff reference and printing only.",
+      "bulkPdfUrl": "pdfs/COUNTER_FOLDER.pdf",
+      "bulkPdfLabel": "Full Counter Folder PDF"
+    },
+    "counterFolderProducts": [],
+    "proceduresSection": {
+      "show": true,
+      "step": "Procedures",
+      "title": "Procedures — Read & Follow",
+      "note": "Click to read. All staff must read both procedures during training."
+    },
+    "procedures": [
+      {
+        "id": "p1",
+        "title": "Customer Complaint & Order Troubleshooting Procedure",
+        "desc": "What to do when a customer raises a complaint or there's an issue with an order.",
+        "url": "pdfs/COMPLAINT_PROCEDURE.pdf"
+      },
+      {
+        "id": "p2",
+        "title": "Nuway Ordering Procedure",
+        "desc": "How to place orders with Stone & Outdoor — codes, minimum quantities, correct process.",
+        "url": "pdfs/ORDERING PROCEDURE.pdf"
+      }
+    ],
+    "complaintSection": {
+      "show": true,
+      "step": "Important",
+      "title": "New Complaint Procedure",
+      "borderColor": "#c0392b",
+      "banner": "All staff must follow this procedure — effective immediately",
+      "steps": [
+        "Listen to the customer's complaint calmly and professionally. Do not offer refunds, replacements, or opinions on fault.",
+        "Record the customer's full name, contact number, product name, quantity purchased, and nature of the complaint.",
+        "Take or request photos of the product concern if available — from the customer or if the product is in store.",
+        "Do not contact Stone & Outdoor directly on behalf of the customer. Direct the customer to the Contact Page inside the counter folder.",
+        "Log the complaint with your store manager so it can be tracked and followed up if required.",
+        "Stone & Outdoor will assess and respond to the customer directly within a reasonable timeframe."
+      ]
+    },
+    "contactsSection": {
+      "show": true,
+      "step": "Contact Directory",
+      "title": "Who to Contact at Stone & Outdoor",
+      "pdfUrl": "pdfs/CONTACTS_LIST.pdf",
+      "pdfLabel": "Full Contacts List PDF",
+      "featured": {
+        "tag": "Sales & Business Development Manager",
+        "name": "Krystal Adamson",
+        "role": "Your Stone & Outdoor Rep — Training & product questions",
+        "mobile": "0493 800 055",
+        "office": "07 3808 4503",
+        "email": "krystal@stoneoutdoor.com.au",
+        "website": "stoneoutdoor.com.au",
+        "websiteUrl": "https://www.stoneoutdoor.com.au"
+      },
+      "cards": [
+        {
+          "id": "c1",
+          "tag": "Sales & Orders",
+          "name": "Sales Enquiries",
+          "role": "General product and order enquiries",
+          "items": [
+            {
+              "type": "phone",
+              "text": "07 3808 4503",
+              "href": "tel:0738084503"
+            },
+            {
+              "type": "mail",
+              "text": "sales@stoneoutdoor.com.au",
+              "href": "mailto:sales@stoneoutdoor.com.au"
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "c2",
+          "tag": "Customer Complaints",
+          "name": "Customer Direct",
+          "role": "For customers to contact Stone & Outdoor directly",
+          "items": [
+            {
+              "type": "phone",
+              "text": "07 3808 4503",
+              "href": "tel:0738084503"
+            },
+            {
+              "type": "globe",
+              "text": "stoneoutdoor.com.au/contact-us",
+              "href": "https://www.stoneoutdoor.com.au/contact-us/"
+            }
+          ],
+          "note": "Direct customers here — do not contact on their behalf"
+        }
+      ]
+    },
+    "checklistSection": {
+      "show": true,
+      "step": "Step 3",
+      "title": "Staff Training Checklist",
+      "trackerLabel": "Training Completion Tracker - TICK ONCE COMPLETED",
+      "extras": [
+        {
+          "id": "guide",
+          "label": "Read the Training Guide"
+        },
+        {
+          "id": "folder",
+          "label": "Counter folder reviewed with manager"
+        },
+        {
+          "id": "yard",
+          "label": "Walked through the outdoor yard stock area"
+        }
+      ],
+      "processTitle": "Independent Training Process",
+      "process": [
+        {
+          "n": 1,
+          "title": "Watch All Videos",
+          "desc": "All staff including yard staff watch the training videos during a quiet period or rainy day."
+        },
+        {
+          "n": 2,
+          "title": "Manager Walkthrough",
+          "desc": "Walk staff through the counter folder, display area, and yard. Write questions down for Krystal."
+        },
+        {
+          "n": 3,
+          "title": "Track & Report",
+          "desc": "Tick off the checklist for each staff member and send completed names to Krystal."
+        },
+        {
+          "n": 4,
+          "title": "6-Month Refresher",
+          "desc": "Krystal visits every 6 months for refresher training and new product updates."
+        }
+      ]
+    },
+    "feedbackSection": {
+      "show": true,
+      "step": "Help Us Improve",
+      "title": "Feedback & Suggestions",
+      "intro": "Have suggestions for the counter folder, or ideas for future videos — quarry tours, how products are made, how-to laying guides? Let Krystal know below.",
+      "confirm": "Thank you! Krystal will review your feedback and be in touch if needed.",
+      "jotformUrl": "https://form.jotform.com/261476914535060"
+    },
+    "completion": {
+      "jotformUrl": "https://form.jotform.com/261477537789073"
+    },
+    "footer": {
+      "text": "© 2026 Stone & Outdoor · Nuway Training Portal · Internal use only",
+      "websiteText": "stoneoutdoor.com.au",
+      "websiteUrl": "https://www.stoneoutdoor.com.au",
+      "contactName": "Krystal Adamson",
+      "contactPhone": "0493 800 055"
+    },
+    "staffCode": "nuway2026"
+  },
+  "build": "2026-05-28-j",
+  "exportedAt": "2026-05-29T01:44:46.320Z"
+}
